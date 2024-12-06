@@ -17,7 +17,7 @@ public class HelloApplication extends Application {
         FXMLLoader splashLoader = new FXMLLoader(getClass().getResource("Splash Screen.fxml"));
 
         Parent splashRoot = splashLoader.load();
-        Scene splashScene = new Scene(splashRoot, 600, 400);
+        Scene splashScene = new Scene(splashRoot, 800, 600);
 
         stage.setScene(splashScene);
 
