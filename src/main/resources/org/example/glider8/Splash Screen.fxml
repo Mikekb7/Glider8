@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="splashPane" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12">
+    <ImageView fx:id="backgroundImage" fitWidth="600.0" fitHeight="400.0" preserveRatio="true" pickOnBounds="true">
+        <image>
+            <Image url="https://www.pixelstalk.net/wp-content/uploads/2016/05/Airplane-HD-Wallpaper.jpg" />
+        </image>
+    </ImageView>
+    <StackPane style="-fx-background-color: rgba(0, 0, 0, 0.4);" />
+
+    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="512.0" spacing="20">
+        <Label style="-fx-font-size: 28; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-family: 'Times New Roman'; -fx-effect: dropshadow(gaussian, black, 5, 0.5, 1, 1);" text="Welcome to" />
+        <Label style="-fx-font-size: 40; -fx-text-fill: #ffd700; -fx-font-weight: bold; -fx-font-family: 'Georgia'; -fx-effect: dropshadow(gaussian, black, 5, 0.5, 1, 1);" text="Glider" />
+        <Label style="-fx-font-size: 18; -fx-text-fill: lightgrey; -fx-font-family: 'Courier New'; -fx-font-style: italic;" text="Come fly with us" />
+
+
+    </VBox>
+</StackPane>
