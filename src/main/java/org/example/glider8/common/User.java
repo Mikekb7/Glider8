@@ -1,6 +1,6 @@
 package org.example.glider8.common;
 import java.util.ArrayList;
-/*
+
 public class User {
     private String username;
     private String password;
@@ -20,12 +20,12 @@ public class User {
     private String action;
 
 
-    public Customer(){
+    public User(){
 
         flights = new ArrayList<>();
     }
 
-    public Customer(String username, String password, String firstName, String lastName, String email, String address, String city, String state, Integer zipcode, String securityQuestion, String securityAnswer){
+    public User(String username, String password, String firstName, String lastName, String email, String address, String city, String state, Integer zipcode, String securityQuestion, String securityAnswer){
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -86,4 +86,4 @@ public class User {
     }
 
 
-}*/
+}
