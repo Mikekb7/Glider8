@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -53,7 +54,7 @@ public class ReservationsController {
         private final ObservableList<Flights> flightData = FXCollections.observableArrayList();
 */
 
-    private void initialize() {
+    public void initialize() {
 
     }
 }

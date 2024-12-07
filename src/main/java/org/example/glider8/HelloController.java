@@ -7,7 +7,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.animation.PauseTransition;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
+
+import java.io.IOException;
 import java.sql.*;
 
 
@@ -81,6 +89,20 @@ public class HelloController {
             try (ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()){
                     loginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
+
+                    PauseTransition pause = new PauseTransition(Duration.seconds(5));
+                    pause.setOnFinished(e -> {
+                        try {
+                            FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("Reservations.fxml"));
+                            Parent nextScene = reservationsLoader.load();
+                            Scene reservationsScene = new Scene(nextScene);
+                            Stage reserveStage = (Stage) loginStatusLabel.getScene().getWindow();
+                            reserveStage.setScene(reservationsScene);
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+                    });
+                    pause.play();
                 } else {
                     loginStatusLabel.setText("Login is unsuccessful. Please try again, " + resultSet.getString("username") + " :( ");
                 }
@@ -91,5 +113,4 @@ public class HelloController {
 
         }
     }
-
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="mainMenuPane" fx:controller="org.example.glider8.HelloController" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox alignment="CENTER" spacing="20">
+        <Label style="-fx-font-size: 30; -fx-text-fill: white; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, black, 5, 0.5, 1, 1);" text="Book Your Next Trip" />
+        <VBox alignment="CENTER" spacing="10">
+
+            <TextField fx:id="usernameField" promptText="Username" prefWidth="200" style="-fx-background-radius: 10; -fx-padding: 5;" />
+            <PasswordField fx:id="passwordField" promptText="Password" prefWidth="200" style="-fx-background-radius: 10; -fx-padding: 5;" />
+            <Label fx:id="loginStatusLabel" text="" style="-fx-font-size: 14; -fx-text-fill: white; -fx-font-style: italic;" />
+
+            <Button fx:id="loginButton" text="Login" prefHeight="39.0" prefWidth="200.0" style="-fx-font-size: 18; -fx-background-color: #ffffff; -fx-text-fill: #2193b0; -fx-background-radius: 10;" />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="10">
+
+            <Button fx:id="forgotPasswordButton" text="Forgot Password?" style="-fx-font-size: 14; -fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-underline: true;" />
+            <Button fx:id="signUpButton" text="Don't have an account? Sign Up" style="-fx-font-size: 14; -fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-underline: true;" />
+        </VBox>
+    </VBox>
+</StackPane>
