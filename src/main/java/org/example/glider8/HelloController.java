@@ -3,6 +3,7 @@ package org.example.glider8;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -15,8 +16,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
 
 
 public class HelloController {
@@ -46,6 +47,11 @@ public class HelloController {
                 ex.printStackTrace();
             }
         });
+
+        forgotPasswordButton.setOnAction(this::forgotPasswordButtonClick);
+
+
+
     }
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
@@ -112,5 +118,39 @@ public class HelloController {
             ex.printStackTrace();
 
         }
+    }
+    @FXML
+    private void forgotPasswordButtonClick(ActionEvent event) {
+        try {
+            System.out.println("Debug: Checking path for ForgotPassword.fxml...");
+            System.out.println(getClass().getResource("ForgotPassword.fxml"));
+
+            //FXMLLoader forgotPasswordLoader = new FXMLLoader(getClass().getResource("ForgotPassword.fxml"));
+            FXMLLoader forgotPasswordLoader = new FXMLLoader();
+
+            Parent forgotPasswordPage = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ForgotPassword.fxml")));
+            Stage forgotPasswordStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            forgotPasswordStage.setScene(new Scene(forgotPasswordPage));
+            forgotPasswordStage.setTitle("Forgot Password");
+            forgotPasswordStage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public Button getSignUpButton() {
+        return signUpButton;
+    }
+
+    public void setSignUpButton(Button signUpButton) {
+        this.signUpButton = signUpButton;
+    }
+
+    public Button getForgotPasswordButton() {
+        return forgotPasswordButton;
+    }
+
+    public void setForgotPasswordButton(Button forgotPasswordButton) {
+        this.forgotPasswordButton = forgotPasswordButton;
     }
 }

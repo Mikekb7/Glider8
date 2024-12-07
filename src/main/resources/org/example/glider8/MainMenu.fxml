@@ -16,9 +16,10 @@
         </VBox>
 
         <VBox alignment="CENTER" spacing="10">
+            <Button fx:id="forgotPasswordButton" text="Forgot Password?" style="-fx-font-size: 14; -fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-underline: true;" onAction="#forgotPasswordButtonClick" />
 
-            <Button fx:id="forgotPasswordButton" text="Forgot Password?" style="-fx-font-size: 14; -fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-underline: true;" />
             <Button fx:id="signUpButton" text="Don't have an account? Sign Up" style="-fx-font-size: 14; -fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-underline: true;" />
         </VBox>
     </VBox>
 </StackPane>
+

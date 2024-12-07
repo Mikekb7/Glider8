@@ -53,7 +53,6 @@ public class ReservationsController {
 
         private final ObservableList<Flights> flightData = FXCollections.observableArrayList();
 */
-
     public void initialize() {
 
     }
