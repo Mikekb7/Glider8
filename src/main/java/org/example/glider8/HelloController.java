@@ -122,8 +122,8 @@ public class HelloController {
     @FXML
     private void forgotPasswordButtonClick(ActionEvent event) {
         try {
-            System.out.println("Debug: Checking path for ForgotPassword.fxml...");
-            System.out.println(getClass().getResource("ForgotPassword.fxml"));
+            System.out.println("Debug: Checking path for ForgotPassword.fxml...");//dont erase this
+            System.out.println(getClass().getResource("ForgotPassword.fxml")); //dont erase this
 
             //FXMLLoader forgotPasswordLoader = new FXMLLoader(getClass().getResource("ForgotPassword.fxml"));
             FXMLLoader forgotPasswordLoader = new FXMLLoader();
