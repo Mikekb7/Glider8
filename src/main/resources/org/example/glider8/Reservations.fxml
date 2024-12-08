@@ -3,7 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:controller="org.example.glider8.ReservationsController"
+           prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
     <!-- Top Bar with Logout Button -->
     <HBox alignment="BOTTOM_RIGHT" prefWidth="800.0" style="-fx-padding: 10;">
         <Button fx:id="mainMenuButton" style="-fx-font-size: 14; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Main Menu" />
@@ -14,7 +15,7 @@
         <!-- Welcome Message -->
         <Label fx:id="welcomeLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, [User]!" />
         <TextField fx:id="reservationIdField" promptText="Enter your Reservation ID" style="-fx-font-size: 16; -fx-background-radius: 10;" />
-      <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" text="Enter" />
+        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Enter" onAction="#handleEnterAction" />
         <TableView fx:id="bookedFlightsTable" prefHeight="300.0" prefWidth="700.0">
             <columns>
                 <TableColumn fx:id="flightNumberColumn" prefWidth="100.0" text="Flight Number" />

@@ -3,6 +3,135 @@ package org.example.glider8;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class ReservationsController {
+
+    @FXML
+    private TextField reservationIdField; // Field to input reservation ID
+    @FXML
+    private TableView<Flight> bookedFlightsTable; // TableView to display flights
+    @FXML
+    private TableColumn<Flight, String> flightNumberColumn;
+    @FXML
+    private TableColumn<Flight, String> departureCityColumn;
+    @FXML
+    private TableColumn<Flight, String> departureTime;
+    @FXML
+    private TableColumn<Flight, String> destinationColumn;
+    @FXML
+    private TableColumn<Flight, String> destinationTime;
+    @FXML
+    private TableColumn<Flight, String> airline;
+
+    private Connection connection;
+
+    // Method to initialize database connection and TableView columns
+    public void initialize() {
+        connectToDatabase();
+
+        // Bind the TableView columns to the Flight model class
+        flightNumberColumn.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
+        departureCityColumn.setCellValueFactory(new PropertyValueFactory<>("departureCity"));
+        departureTime.setCellValueFactory(new PropertyValueFactory<>("departureTime"));
+        destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
+        destinationTime.setCellValueFactory(new PropertyValueFactory<>("destinationTime"));
+        airline.setCellValueFactory(new PropertyValueFactory<>("airline"));
+    }
+
+    // Connect to the database
+    private void connectToDatabase() {
+        String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
+        String username = "glider"; // Replace with your database username
+        String password = "Gpassword123"; // Replace with your database password
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Database connection established successfully.");
+        } catch (Exception e) {
+            System.err.println("Error connecting to database: " + e.getMessage());
+        }
+    }
+
+    // Handle the "Enter" button click
+    @FXML
+    private void handleEnterAction() {
+        String reservationId = reservationIdField.getText().trim();
+
+        // Validate the input
+        if (reservationId.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a reservation ID.");
+            return;
+        }
+
+        // Clear previous data from the TableView
+        bookedFlightsTable.getItems().clear();
+
+        // Query the database to find the reservation
+        String query = "SELECT * FROM reservations WHERE reservation_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, reservationId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                ObservableList<Flight> flights = FXCollections.observableArrayList();
+
+                // Add flight data to the list
+                while (resultSet.next()) {
+                    flights.add(new Flight(
+                            resultSet.getString("flight_number"),
+                            resultSet.getString("departure_city"),
+                            resultSet.getString("departure_time"),
+                            resultSet.getString("destination_city"),
+                            resultSet.getString("destination_time"),
+                            resultSet.getString("airline")
+                    ));
+                }
+
+                if (flights.isEmpty()) {
+                    // If no flights are found
+                    showAlert(Alert.AlertType.INFORMATION, "Not Found", "Couldn't find a flight with the provided reservation ID. Please try again.");
+                } else {
+                    // Populate the TableView with flight data
+                    bookedFlightsTable.setItems(flights);
+                }
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching the reservation: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Utility method to show alerts
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,7 +147,7 @@ import java.sql.ResultSet;
 
 public class ReservationsController {
 
-    @FXML
+   /* @FXML
     private Button mainMenuButton;
 
     @FXML
@@ -53,7 +182,7 @@ public class ReservationsController {
 
         private final ObservableList<Flights> flightData = FXCollections.observableArrayList();
 */
-    public void initialize() {
+    /*public void initialize() {
 
     }
 }
