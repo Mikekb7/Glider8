@@ -43,6 +43,9 @@ public class HelloController {
     private Label adminLoginStatusLabel;
     @FXML
     private Label customerLoginStatusLabel;
+    @FXML
+    private Button backToLoginButton;
+
 // Label to display the login status
 
 
@@ -73,6 +76,7 @@ public class HelloController {
 
         forgotPasswordButton.setOnAction(this::forgotPasswordButtonClick);
         signUpButton.setOnAction(this::signUpButtonClick);
+        //backToLoginButton.setOnAction(this::forgotPasswordButtonClick);
 
 
 
@@ -90,74 +94,74 @@ public class HelloController {
             customerLoginStatusLabel.setText("Failed to connect to database.");
         }
     }
-
-    @FXML
-    private void loginButtonClick(ActionEvent event) {
-        Actions.handleLogin(
-                connection,
-                customerUsernameField,
-                customerPasswordField,
-                customerLoginStatusLabel,
-                "Reservations.fxml"
-        );
-    }
-
-
-
-
     /*
-    @FXML
-    private void loginButtonClick(ActionEvent event) throws SQLException {
-        String customerUsernameInput = customerUsernameField.getText().trim();
-        String customerPasswordInput = customerPasswordField.getText().trim();
+      @FXML
+      private void loginButtonClick(ActionEvent event) {
+          Actions.handleLogin(
+                  connection,
+                  customerUsernameField,
+                  customerPasswordField,
+                  customerLoginStatusLabel,
+                  "Reservations.fxml"
+          );
+      }*/
 
-        // Validate input fields
-        if (customerPasswordInput.isEmpty() || customerPasswordInput.isEmpty()) {
-            customerLoginStatusLabel.setText("Please enter both username and password.");
-            return;
-        }
 
-        // Ensure database connection is established
-        if (connection == null) {
-            customerLoginStatusLabel.setText("Database connection not available.");
-            return;
-        }
 
-       // loginButton.setText(("Executing log in: " + usernameInput + passwordInput));
 
-        String loginQuery = "SELECT * FROM user where username = ? and password = ?";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
-            preparedStatement.setString(1, customerUsernameInput);
-            preparedStatement.setString(2, customerPasswordInput);
+      @FXML
+      private void loginButtonClick(ActionEvent event) throws SQLException {
+          String customerUsernameInput = customerUsernameField.getText().trim();
+          String customerPasswordInput = customerPasswordField.getText().trim();
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    customerLoginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
+          // Validate input fields
+          if (customerPasswordInput.isEmpty() || customerPasswordInput.isEmpty()) {
+              customerLoginStatusLabel.setText("Please enter both username and password.");
+              return;
+          }
 
-                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-                    pause.setOnFinished(e -> {
-                        try {
-                            FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("Reservations.fxml"));
-                            Parent nextScene = reservationsLoader.load();
-                            Scene reservationsScene = new Scene(nextScene);
-                            Stage reserveStage = (Stage) customerLoginStatusLabel.getScene().getWindow();
-                            reserveStage.setScene(reservationsScene);
-                        } catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-                    });
-                    pause.play();
-                } else {
-                    customerLoginStatusLabel.setText("Login is unsuccessful. Please try again, " + resultSet.getString("username") + " :( ");
-                }
-            }
-        } catch (SQLException ex){
-            customerLoginStatusLabel.setText("Error executing login query: " + ex.getMessage());
-            ex.printStackTrace();
+          // Ensure database connection is established
+          if (connection == null) {
+              customerLoginStatusLabel.setText("Database connection not available.");
+              return;
+          }
 
-        }
-    }*/
+         // loginButton.setText(("Executing log in: " + usernameInput + passwordInput));
+
+          String loginQuery = "SELECT * FROM user where username = ? and password = ?";
+
+          try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
+              preparedStatement.setString(1, customerUsernameInput);
+              preparedStatement.setString(2, customerPasswordInput);
+
+              try (ResultSet resultSet = preparedStatement.executeQuery()){
+                  if (resultSet.next()){
+                      customerLoginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
+
+                      PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                      pause.setOnFinished(e -> {
+                          try {
+                              FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("Reservations.fxml"));
+                              Parent nextScene = reservationsLoader.load();
+                              Scene reservationsScene = new Scene(nextScene);
+                              Stage reserveStage = (Stage) customerLoginStatusLabel.getScene().getWindow();
+                              reserveStage.setScene(reservationsScene);
+                          } catch (Exception ex){
+                              ex.printStackTrace();
+                          }
+                      });
+                      pause.play();
+                  } else {
+                      customerLoginStatusLabel.setText("Login is unsuccessful. Please try again, " + resultSet.getString("username") + " :( ");
+                  }
+              }
+          } catch (SQLException ex){
+              customerLoginStatusLabel.setText("Error executing login query: " + ex.getMessage());
+              ex.printStackTrace();
+
+          }
+      }
     @FXML
     private void forgotPasswordButtonClick(ActionEvent event) {
         /*try {
@@ -178,8 +182,18 @@ public class HelloController {
         Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Forgot Password");
     }
     private void signUpButtonClick(ActionEvent event) {
-        Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Sign Up");
+        Actions.loadFXML(event, "/org/example/glider8/ForgetPassword.fxml", "Sign Up");
     }
+    /*private void loginButtonClick(ActionEvent event) {
+        Actions.loadFXML(event, "/org/example/glider8/Reservations.fxml", "Forgot Password");
+    }*/
+    private void backToLoginClick(ActionEvent event) {
+        Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Sign Up");
+    }
+
+
+
+    //backToLoginClick
 @FXML
     private Button getSignUpButton() {
         return signUpButton;

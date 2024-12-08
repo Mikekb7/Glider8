@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.animation.PauseTransition;
+import org.example.glider8.common.Actions;
 
 import java.io.IOException;
 
@@ -28,6 +29,8 @@ public class HelloApplication extends Application {
         PauseTransition delay = new PauseTransition(Duration.seconds(5));
         delay.setOnFinished(event -> {
             try {
+                //Actions.loadFXML(new ActionEvent(), "/org/example/glider8/MainMenu.fxml", "Main Menu");
+
                 // Load the Main Menu FXML after the splash
                 FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
                 Parent mainMenuRoot = mainMenuLoader.load();
@@ -35,7 +38,7 @@ public class HelloApplication extends Application {
 
                 stage.setScene(mainMenuScene);
                 stage.setTitle("Main Menu");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });

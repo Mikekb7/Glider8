@@ -1,5 +1,6 @@
 package org.example.glider8;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -9,8 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.glider8.common.Actions;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
@@ -38,16 +39,7 @@ public class ForgotPasswordController {
     }
 
     @FXML
-    private void handleBackToLogin(ActionEvent event) {
-        try {
-            FXMLLoader loaderBackLogin = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
-            Parent mainMenuPage = loaderBackLogin.load();
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(mainMenuPage));
-            stage.setTitle("Main Menu");
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    private void backToLoginClick(ActionEvent event) {
+        Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Sign Up");
     }
 }
