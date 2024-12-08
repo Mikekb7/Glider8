@@ -34,7 +34,7 @@ public class ReservationsController {
     @FXML
     private TableColumn<Flight, String> airline;
     @FXML
-    private Button mainMenuButton; // Logout button
+    private Button Logout; // Logout button
 
     private Connection connection;
 
@@ -131,22 +131,26 @@ public class ReservationsController {
         }
     }
 
+    @FXML
+    private Button logoutButton; // Ensure this matches your fx:id in Reservations.fxml
 
     @FXML
     private void handleLogoutAction() {
         System.out.println("Logout button clicked."); // Debug statement
         try {
+            System.out.println(getClass().getResource("/org/example/glider8/MainMenu.fxml")); // Debug file path
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/MainMenu.fxml"));
             Parent mainMenuRoot = loader.load();
 
-            Stage stage = (Stage) mainMenuButton.getScene().getWindow();
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
             stage.setScene(new Scene(mainMenuRoot));
-            stage.setTitle("Main Menu - Glider");
+            stage.setTitle("Main Menu");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
         }
     }
+
 
 }
 
