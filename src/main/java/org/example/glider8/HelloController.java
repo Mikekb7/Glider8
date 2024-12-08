@@ -49,13 +49,13 @@ public class HelloController {
 
     private Connection connection;
 
-
+@FXML
     private void initialize() {
-        connectToDatabase();
+        connection = DatabaseConnection.getConnection();
         customerLoginButton.setOnAction(e -> {
             try {
                 loginButtonClick(e);
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 customerLoginStatusLabel.setText("Error occurred while logging user to the system. Please try again." + ex.getMessage());
                 ex.printStackTrace();
             }
@@ -72,6 +72,7 @@ public class HelloController {
         });*/
 
         forgotPasswordButton.setOnAction(this::forgotPasswordButtonClick);
+        signUpButton.setOnAction(this::signUpButtonClick);
 
 
 
@@ -91,7 +92,22 @@ public class HelloController {
     }
 
     @FXML
-    protected void loginButtonClick(ActionEvent event) throws SQLException {
+    private void loginButtonClick(ActionEvent event) {
+        Actions.handleLogin(
+                connection,
+                customerUsernameField,
+                customerPasswordField,
+                customerLoginStatusLabel,
+                "Reservations.fxml"
+        );
+    }
+
+
+
+
+    /*
+    @FXML
+    private void loginButtonClick(ActionEvent event) throws SQLException {
         String customerUsernameInput = customerUsernameField.getText().trim();
         String customerPasswordInput = customerPasswordField.getText().trim();
 
@@ -141,7 +157,7 @@ public class HelloController {
             ex.printStackTrace();
 
         }
-    }
+    }*/
     @FXML
     private void forgotPasswordButtonClick(ActionEvent event) {
         /*try {
@@ -161,20 +177,23 @@ public class HelloController {
         }*/
         Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Forgot Password");
     }
-
-    public Button getSignUpButton() {
+    private void signUpButtonClick(ActionEvent event) {
+        Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Sign Up");
+    }
+@FXML
+    private Button getSignUpButton() {
         return signUpButton;
     }
 
-    public void setSignUpButton(Button signUpButton) {
+    private void setSignUpButton(Button signUpButton) {
         this.signUpButton = signUpButton;
     }
 
-    public Button getForgotPasswordButton() {
+    private Button getForgotPasswordButton() {
         return forgotPasswordButton;
     }
 
-    public void setForgotPasswordButton(Button forgotPasswordButton) {
+    private void setForgotPasswordButton(Button forgotPasswordButton) {
         this.forgotPasswordButton = forgotPasswordButton;
     }
 }
