@@ -7,7 +7,7 @@
            prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
     <!-- Top Bar with Logout Button -->
     <HBox alignment="BOTTOM_RIGHT" prefWidth="800.0" style="-fx-padding: 10;">
-        <Button fx:id="mainMenuButton" style="-fx-font-size: 14; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Main Menu" />
+        <Button fx:id="MainMenuButton" onAction="#handleLogoutAction" style="-fx-font-size: 14; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Logout" />
     </HBox>
 
     <!-- Main Content -->

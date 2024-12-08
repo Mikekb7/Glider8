@@ -3,8 +3,12 @@ package org.example.glider8;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,6 +33,8 @@ public class ReservationsController {
     private TableColumn<Flight, String> destinationTime;
     @FXML
     private TableColumn<Flight, String> airline;
+    @FXML
+    private Button mainMenuButton; // Logout button
 
     private Connection connection;
 
@@ -124,13 +130,25 @@ public class ReservationsController {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    private void handleLogoutAction() {
+        System.out.println("Logout button clicked."); // Debug statement
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/MainMenu.fxml"));
+            Parent mainMenuRoot = loader.load();
+
+            Stage stage = (Stage) mainMenuButton.getScene().getWindow();
+            stage.setScene(new Scene(mainMenuRoot));
+            stage.setTitle("Main Menu - Glider");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
+        }
+    }
+
 }
-
-
-
-
-
-
 
 
 
