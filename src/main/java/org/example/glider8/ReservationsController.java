@@ -32,7 +32,6 @@ public class ReservationsController {
 
     private Connection connection;
 
-    // Method to initialize database connection and TableView columns
     public void initialize() {
         connectToDatabase();
 
@@ -43,9 +42,11 @@ public class ReservationsController {
         destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
         destinationTime.setCellValueFactory(new PropertyValueFactory<>("destinationTime"));
         airline.setCellValueFactory(new PropertyValueFactory<>("airline"));
+
+        // Set the default placeholder for the TableView
+        bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
     }
 
-    // Connect to the database
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
         String username = "glider"; // Replace with your database username
@@ -59,22 +60,39 @@ public class ReservationsController {
         }
     }
 
-    // Handle the "Enter" button click
     @FXML
     private void handleEnterAction() {
         String reservationId = reservationIdField.getText().trim();
 
         // Validate the input
         if (reservationId.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a reservation ID.");
+            bookedFlightsTable.setPlaceholder(new Label("Please enter a reservation ID."));
+            bookedFlightsTable.getItems().clear();
             return;
         }
 
         // Clear previous data from the TableView
         bookedFlightsTable.getItems().clear();
 
-        // Query the database to find the reservation
-        String query = "SELECT * FROM reservations WHERE reservation_id = ?";
+        // Query the database to find flight information for the reservation
+        String query = """
+            SELECT 
+                flights.flight_number,
+                flights.departure_city,
+                flights.departure_time,
+                flights.destination_city,
+                flights.destination_time,
+                flights.airline
+            FROM 
+                reservations
+            JOIN 
+                flights 
+            ON 
+                reservations.flight_number = flights.flight_number
+            WHERE 
+                reservations.reservation_id = ?;
+            """;
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, reservationId);
 
@@ -94,28 +112,20 @@ public class ReservationsController {
                 }
 
                 if (flights.isEmpty()) {
-                    // If no flights are found
-                    showAlert(Alert.AlertType.INFORMATION, "Not Found", "Couldn't find a flight with the provided reservation ID. Please try again.");
+                    // If no flights are found, update the placeholder
+                    bookedFlightsTable.setPlaceholder(new Label("Invalid reservation ID. No flights found."));
                 } else {
                     // Populate the TableView with flight data
                     bookedFlightsTable.setItems(flights);
                 }
             }
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching the reservation: " + e.getMessage());
+            bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching the reservation."));
             e.printStackTrace();
         }
     }
-
-    // Utility method to show alerts
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }
+
 
 
 
