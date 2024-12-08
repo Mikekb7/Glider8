@@ -76,10 +76,8 @@ public class HelloController {
 
         forgotPasswordButton.setOnAction(this::forgotPasswordButtonClick);
         signUpButton.setOnAction(this::signUpButtonClick);
+
         //backToLoginButton.setOnAction(this::forgotPasswordButtonClick);
-
-
-
     }
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
@@ -105,10 +103,6 @@ public class HelloController {
                   "Reservations.fxml"
           );
       }*/
-
-
-
-
 
       @FXML
       private void loginButtonClick(ActionEvent event) throws SQLException {
@@ -186,10 +180,10 @@ public class HelloController {
     }
     /*private void loginButtonClick(ActionEvent event) {
         Actions.loadFXML(event, "/org/example/glider8/Reservations.fxml", "Forgot Password");
-    }*/
+    }
     private void backToLoginClick(ActionEvent event) {
         Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Sign Up");
-    }
+    }*/
 
 
 

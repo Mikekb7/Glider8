@@ -2,18 +2,23 @@ package org.example.glider8;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 public class ReservationsController {
 
@@ -34,7 +39,7 @@ public class ReservationsController {
     @FXML
     private TableColumn<Flight, String> airline;
     @FXML
-    private Button Logout; // Logout button
+    private Button LogoutButton; // Logout button
 
     private Connection connection;
 
@@ -51,6 +56,7 @@ public class ReservationsController {
 
         // Set the default placeholder for the TableView
         bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
+        LogoutButton.setOnAction(this::logoutButtonClick);
     }
 
     private void connectToDatabase() {
@@ -131,25 +137,24 @@ public class ReservationsController {
         }
     }
 
-    @FXML
-    private Button logoutButton; // Ensure this matches your fx:id in Reservations.fxml
+
 
     @FXML
-    private void handleLogoutAction() {
+    private void logoutButtonClick(ActionEvent event) {
         System.out.println("Logout button clicked."); // Debug statement
         try {
             System.out.println(getClass().getResource("/org/example/glider8/MainMenu.fxml")); // Debug file path
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/MainMenu.fxml"));
-            Parent mainMenuRoot = loader.load();
-
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            Parent mainMenuRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainMenu.fxml")));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(mainMenuRoot));
             stage.setTitle("Main Menu");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
         }
+
     }
+
 
 
 }

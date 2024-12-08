@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.glider8.BookingController">
+    <HBox alignment="TOP_LEFT" prefWidth="800.0" style="-fx-padding: 10;">
+
+        <Button text="Back to Login" fx:id="backToLoginButton"  prefHeight="15.0" prefWidth="130.0" style="-fx-font-size: 15; -fx-background-color: #ffffff; -fx-text-fill: #d9534f; -fx-background-radius: 10;" onAction="#backToLoginClick"/>
+    </HBox>
+    <VBox spacing="20" alignment="CENTER" style="-fx-padding: 20;">
+        <Label text="Search Flights" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;" />
+
+        <GridPane hgap="10" vgap="15" alignment="CENTER">
+            <Label text="From City:" style="-fx-font-size: 16; -fx-text-fill: white;" />
+            <TextField fx:id="fromCityField" promptText="Enter departure city" GridPane.columnIndex="1" />
+
+            <Label text="To City:" style="-fx-font-size: 16; -fx-text-fill: white;" GridPane.rowIndex="1" />
+            <TextField fx:id="toCityField" promptText="Enter destination city" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label text="Date:" style="-fx-font-size: 16; -fx-text-fill: white;" GridPane.rowIndex="2" />
+            <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+
+            <Label text="Time:" style="-fx-font-size: 16; -fx-text-fill: white;" GridPane.rowIndex="3" />
+            <TextField fx:id="timeField" promptText="Enter time (e.g., HH:mm)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        </GridPane>
+
+        <Button text="Search Flights" fx:id="searchButton" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" />
+
+        <TableView fx:id="resultsTable" prefHeight="200.0" prefWidth="600.0" style="-fx-background-radius: 10;">
+            <columns>
+                <TableColumn text="Flight Number" fx:id="flightNumberColumn" />
+                <TableColumn text="From City" fx:id="fromCityColumn" />
+                <TableColumn text="To City" fx:id="toCityColumn" />
+                <TableColumn text="Date" fx:id="dateColumn" />
+                <TableColumn text="Time" fx:id="timeColumn" />
+                <TableColumn text="Available Seats" fx:id="seatsColumn" />
+            </columns>
+        </TableView>
+
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Book Flight" fx:id="bookButton" style="-fx-font-size: 16; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" />
+        </HBox>
+    </VBox>
+</StackPane>
