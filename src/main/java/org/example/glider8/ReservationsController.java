@@ -14,10 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Objects;
 
 public class ReservationsController {
@@ -39,6 +36,11 @@ public class ReservationsController {
     @FXML
     private TableColumn<Flight, String> airline;
     @FXML
+    private TableColumn<Flight, String> availableSeats;
+    @FXML
+    private TableColumn<Flight, String> capacity;
+
+    @FXML
     private Button LogoutButton; // Logout button
 
     private Connection connection;
@@ -53,6 +55,8 @@ public class ReservationsController {
         destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
         destinationTime.setCellValueFactory(new PropertyValueFactory<>("destinationTime"));
         airline.setCellValueFactory(new PropertyValueFactory<>("airline"));
+        availableSeats.setCellValueFactory(new PropertyValueFactory<>("seatsAvailable"));
+        capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 
         // Set the default placeholder for the TableView
         bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
@@ -94,7 +98,9 @@ public class ReservationsController {
                 flights.departure_time,
                 flights.destination_city,
                 flights.destination_time,
-                flights.airline
+                flights.airline,
+                flights.available_seats,
+                flights.capacity
             FROM 
                 reservations
             JOIN 
@@ -119,7 +125,9 @@ public class ReservationsController {
                             resultSet.getString("departure_time"),
                             resultSet.getString("destination_city"),
                             resultSet.getString("destination_time"),
-                            resultSet.getString("airline")
+                            resultSet.getString("airline"),
+                            resultSet.getString("available_seats"),
+                            resultSet.getString("capacity")
                     ));
                 }
 
@@ -131,7 +139,7 @@ public class ReservationsController {
                     bookedFlightsTable.setItems(flights);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching the reservation."));
             e.printStackTrace();
         }
