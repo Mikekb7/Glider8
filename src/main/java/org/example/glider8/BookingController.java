@@ -62,4 +62,3 @@ private Connection connection;
     public void backToLoginClick() {
     }
 }
-*/
