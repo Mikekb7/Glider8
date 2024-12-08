@@ -7,15 +7,19 @@ public class Flight {
     private String destinationCity;
     private String destinationTime;
     private String airline;
+    private String availableSeats;
+    private String capacity;
 
     public Flight(String flightNumber, String departureCity, String departureTime,
-                  String destinationCity, String destinationTime, String airline) {
+                  String destinationCity, String destinationTime, String airline, String  availableSeats, String capacity) {
         this.flightNumber = flightNumber;
         this.departureCity = departureCity;
         this.departureTime = departureTime;
         this.destinationCity = destinationCity;
         this.destinationTime = destinationTime;
         this.airline = airline;
+        this.availableSeats = availableSeats;
+        this.capacity = capacity;
     }
 
     public String getFlightNumber() {
@@ -41,4 +45,13 @@ public class Flight {
     public String getAirline() {
         return airline;
     }
+
+    public String getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
 }

@@ -24,6 +24,9 @@
                 <TableColumn fx:id="destinationColumn" prefWidth="100.0" text="Destination City" />
                 <TableColumn fx:id="destinationTime" prefWidth="105.0" text="Destination Time" />
                 <TableColumn fx:id="airline" prefWidth="105.0" text="Airline" />
+                <TableColumn fx:id="availableSeats" prefWidth="105.0" text="Available Seats" />
+                <TableColumn fx:id="capacity" prefWidth="105.0" text="Capacity" />
+
             </columns>
             <!-- Placeholder for Empty Table -->
             <placeholder>
