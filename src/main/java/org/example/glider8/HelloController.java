@@ -220,7 +220,7 @@ private Button backToLoginButton;
         Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Forgot Password");
     }
     private void signUpButtonClick(ActionEvent event) {
-        Actions.loadFXML(event, "/org/example/glider8/ForgetPassword.fxml", "Sign Up");
+        Actions.loadFXML(event, "/org/example/glider8/Register-view.fxml", "Sign Up");
     }
     /*private void loginButtonClick(ActionEvent event) {
         Actions.loadFXML(event, "/org/example/glider8/Reservations.fxml", "Forgot Password");
