@@ -9,7 +9,7 @@
         <HBox alignment="TOP_LEFT" spacing="10" prefWidth="800.0" style="-fx-padding: 10;">
             <Button text="Back to Login" fx:id="backToLoginButton"
                     prefHeight="30.0" prefWidth="130.0"
-                    style="-fx-font-size: 15; -fx-background-color: #ffffff; -fx-text-fill: #d9534f; -fx-background-radius: 10;" />
+                    style="-fx-font-size: 15; -fx-background-color: #ffffff; -fx-text-fill: #d9534f; -fx-background-radius: 10;" onAction="#backToLoginButtonClick"/>
         </HBox>
         <Label style="-fx-font-size: 32; -fx-text-fill: white; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, black, 5, 0.5, 1, 1);" text="Sign up to GLIDE with us!" />
 
