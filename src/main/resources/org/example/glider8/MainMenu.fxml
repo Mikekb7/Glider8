@@ -14,7 +14,7 @@
                 <TextField fx:id="adminUsernameField" prefWidth="200" promptText="Username" style="-fx-background-radius: 10; -fx-padding: 5;" />
                 <PasswordField fx:id="adminPasswordField" prefWidth="200" promptText="Password" style="-fx-background-radius: 10; -fx-padding: 5;" />
                 <Label fx:id="adminLoginStatusLabel" style="-fx-font-size: 14; -fx-text-fill: white; -fx-font-style: italic;" text="" />
-                <Button fx:id="adminLoginButton" prefHeight="39.0" prefWidth="200.0" style="-fx-font-size: 18; -fx-background-color: #ffffff; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Login" />
+                <Button fx:id="adminLoginButton" prefHeight="39.0" prefWidth="200.0" style="-fx-font-size: 18; -fx-background-color: #ffffff; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Login" onAction="#adminLoginButtonClick" />
             </VBox>
 
             <!-- Separator Line -->

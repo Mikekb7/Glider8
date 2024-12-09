@@ -23,28 +23,28 @@ import java.util.Objects;
 
 
 public class HelloController {
-    @FXML
-    private TextField customerUsernameField;
-    @FXML
-    private TextField adminUsernameField;
-    @FXML
-    private PasswordField customerPasswordField;
-    @FXML
-    private PasswordField adminPasswordField;
-    @FXML
-    private Button adminLoginButton;
-    @FXML
-    private Button customerLoginButton;
-    @FXML
-    private Button forgotPasswordButton;
-    @FXML
-    private Button signUpButton;
-    @FXML
-    private Label adminLoginStatusLabel;
-    @FXML
-    private Label customerLoginStatusLabel;
-    @FXML
-    private Button backToLoginButton;
+@FXML
+private TextField customerUsernameField;
+@FXML
+private TextField adminUsernameField;
+@FXML
+private PasswordField customerPasswordField;
+@FXML
+private PasswordField adminPasswordField;
+@FXML
+private Button adminLoginButton;
+@FXML
+private Button customerLoginButton;
+@FXML
+private Button forgotPasswordButton;
+@FXML
+private Button signUpButton;
+@FXML
+private Label adminLoginStatusLabel;
+@FXML
+private Label customerLoginStatusLabel;
+@FXML
+private Button backToLoginButton;
 
 // Label to display the login status
 
@@ -63,6 +63,14 @@ public class HelloController {
                 ex.printStackTrace();
             }
         });
+    adminLoginButton.setOnAction(e -> {
+        try {
+            adminLoginButtonClick(e);
+        } catch (Exception ex) {
+            adminLoginStatusLabel.setText("Error occurred while logging admin to the system. Please try again." + ex.getMessage());
+            ex.printStackTrace();
+        }
+    });
 /*
     private void initialize() {
         customerLoginButton.setOnAction(e -> {
@@ -79,6 +87,7 @@ public class HelloController {
 
         //backToLoginButton.setOnAction(this::forgotPasswordButtonClick);
     }
+
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
         String username = "glider"; // Replace with actual username
@@ -156,6 +165,56 @@ public class HelloController {
 
           }
       }
+    @FXML
+    private void adminLoginButtonClick(ActionEvent event) throws SQLException {
+        String adminUsernameInput = adminUsernameField.getText().trim();
+        String adminPasswordInput = adminPasswordField.getText().trim();
+
+        // Validate input fields
+        if (adminUsernameInput.isEmpty() || adminPasswordInput.isEmpty()) {
+            customerLoginStatusLabel.setText("Please enter both username and password.");
+            return;
+        }
+
+        // Ensure database connection is established
+        if (connection == null) {
+            customerLoginStatusLabel.setText("Database connection not available.");
+            return;
+        }
+
+        String loginQuery = "SELECT * FROM user where username = ? and password = ? and role = 'admin'";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
+            preparedStatement.setString(1, adminUsernameInput);
+            preparedStatement.setString(2, adminPasswordInput);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    adminLoginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
+
+                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                    pause.setOnFinished(e -> {
+                        try {
+                            FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("Reservations.fxml"));
+                            Parent nextScene = reservationsLoader.load();
+                            Scene reservationsScene = new Scene(nextScene);
+                            Stage reserveStage = (Stage) adminLoginStatusLabel.getScene().getWindow();
+                            reserveStage.setScene(reservationsScene);
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+                    });
+                    pause.play();
+                } else {
+                    adminLoginStatusLabel.setText("Login is unsuccessful. Please try again, " + resultSet.getString("username") + " :( ");
+                }
+            }
+        } catch (SQLException ex){
+            adminLoginStatusLabel.setText("Error executing login query: " + ex.getMessage());
+            ex.printStackTrace();
+
+        }
+    }
     @FXML
     private void forgotPasswordButtonClick(ActionEvent event) {
         /*try {
