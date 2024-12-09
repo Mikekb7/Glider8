@@ -196,6 +196,7 @@ package org.example.glider8;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -204,6 +205,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -239,6 +241,8 @@ public class BookingController {
     private Button bookButton; // Button to book flights
     @FXML
     private Button backToLoginButton; // Button to return to the login page
+    @FXML
+    private Button backToReservationsButton; // Button to return to the reservations page
 
     private Connection connection;
 
@@ -259,6 +263,7 @@ public class BookingController {
         // Attach actions to buttons
         searchButton.setOnAction(event -> searchFlights());
         backToLoginButton.setOnAction(event -> backToLoginClick());
+        backToReservationsButton.setOnAction(event -> backToReservationsClick());
     }
 
     private void connectToDatabase() {
@@ -347,10 +352,24 @@ public class BookingController {
 
             Stage stage = (Stage) backToLoginButton.getScene().getWindow();
             stage.setScene(new Scene(mainMenuRoot));
-            stage.setTitle("Main Menu - Glider");
+            stage.setTitle("Log in - Glider");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
+        }
+    }
+    @FXML
+    private void backToReservationsClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Reservations.fxml"));
+            Parent mainMenuRoot = loader.load();
+
+            Stage stage = (Stage) backToReservationsButton.getScene().getWindow();
+            stage.setScene(new Scene(mainMenuRoot));
+            stage.setTitle("Reservations - Glider");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading Reservations.fxml: " + e.getMessage());
         }
     }
 }
