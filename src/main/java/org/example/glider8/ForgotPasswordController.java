@@ -1,4 +1,4 @@
-/*package org.example.glider8;
+package org.example.glider8;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,26 +35,41 @@ public class ForgotPasswordController {
     @FXML
     private Button backToLoginButton;
 
+    @FXML
+    private Button handleRetrievePassword;
+
+    private Connection connection;
+
 
 
     public void initialize() {
-        getConnection();
+        connectToDatabase();
         passwordLabel.setText("");
+        backToLoginButton.setOnAction(this::backToLoginButtonClick);
+        handleRetrievePassword.setOnAction(this::handleRetrievePasswordClick);
+
+    }
+    private void connectToDatabase() {
+        String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
+        String username = "glider"; // Replace with your database username
+        String password = "Gpassword123"; // Replace with your database password
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Database connection established successfully.");
+        } catch (Exception e) {
+            System.err.println("Error connecting to database: " + e.getMessage());
+        }
     }
 
-
     @FXML
-    private void forgotPasswordButtonClick() {
-    }
-
-    @FXML
-    private void backToLoginClick(ActionEvent event) {
+    private void backToLoginButtonClick(ActionEvent event) {
         Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Sign Up");
     }
-    }
+
 
     @FXML
-    private void handleRetrievePassword(ActionEvent event) {
+    private void handleRetrievePasswordClick(ActionEvent event) {
         String username = usernameField.getText().trim();
         String securityAnswer = securityAnswerField.getText().trim();
 
@@ -63,30 +78,28 @@ public class ForgotPasswordController {
             return;
         }
 
-        String query = "SELECT password FROM user WHERE username = ? and security_answer = ?";
+        String query = "SELECT password FROM user WHERE username = ? AND securityanswer = ?";
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setString(1, username);
+            preparedStatement.setString(2, securityAnswer);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                String correctAnswer = resultSet.getString("security_answer");
+                // Retrieve the password from the database
                 String password = resultSet.getString("password");
-
-
-                if (securityAnswer.equalsIgnoreCase(correctAnswer)) {
-                    passwordLabel.setText("Your Password: " + password);
-                } else {
-                    showAlert(Alert.AlertType.ERROR, "Incorrect Answer", "The security answer is incorrect.");
-                }
+                // Display the password in the label
+                passwordLabel.setText("Your Password: " + password);
             } else {
-                showAlert(Alert.AlertType.ERROR, "User Not Found", "No user found with the entered username.");
+                // Handle case where username and security answer do not match
+                showAlert(Alert.AlertType.ERROR, "Invalid Credentials", "The username or security answer is incorrect.");
             }
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while retrieving the password.");
         }
     }
+
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
@@ -95,4 +108,4 @@ public class ForgotPasswordController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-}*/
+}
