@@ -10,8 +10,7 @@ public class Flight {
     private String availableSeats;
     private String capacity;
 
-    public Flight(String flightNumber, String departureCity, String departureTime,
-                  String destinationCity, String destinationTime, String airline, String  availableSeats, String capacity) {
+    public Flight(String flightNumber, String departureCity, String departureTime, String destinationCity, String destinationTime, String airline, String availableSeats, String capacity) {
         this.flightNumber = flightNumber;
         this.departureCity = departureCity;
         this.departureTime = departureTime;
@@ -22,6 +21,7 @@ public class Flight {
         this.capacity = capacity;
     }
 
+    // Getters
     public String getFlightNumber() {
         return flightNumber;
     }
@@ -53,5 +53,4 @@ public class Flight {
     public String getCapacity() {
         return capacity;
     }
-
 }
