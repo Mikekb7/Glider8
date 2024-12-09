@@ -245,6 +245,21 @@ private Button backToLoginButton;
     }*/
 
 
+    @FXML
+    private void logoutButtonClick(ActionEvent event) {
+        System.out.println("Logout button clicked."); // Debug statement
+        try {
+            System.out.println(getClass().getResource("/org/example/glider8/MainMenu.fxml")); // Debug file path
+            Parent mainMenuRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainMenu.fxml")));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(mainMenuRoot));
+            stage.setTitle("Main Menu");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
+        }
+
+    }
 
     //backToLoginClick
 @FXML
