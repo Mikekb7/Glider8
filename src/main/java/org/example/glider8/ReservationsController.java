@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -39,6 +40,9 @@ public class ReservationsController {
     private TableColumn<Flight, String> availableSeats;
     @FXML
     private TableColumn<Flight, String> capacity;
+
+    @FXML
+    private Button bookFlightButton; // Link to "Book a New Flight" button
 
     @FXML
     private Button LogoutButton; // Logout button
@@ -146,23 +150,20 @@ public class ReservationsController {
     }
 
 
-        @FXML
-        private Button bookFlightButton; // Link to "Book a New Flight" button
-
-        @FXML
-        private void bookFlightButtonClick() {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Bookings.fxml"));
-                Parent bookingPage = loader.load();
-
-                Stage stage = (Stage) bookFlightButton.getScene().getWindow();
-                stage.setScene(new Scene(bookingPage));
-                stage.setTitle("Book a Flight - Glider");
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Error loading Bookings.fxml: " + e.getMessage());
-            }
+    @FXML
+    protected void bookFlightButtonClick(ActionEvent event) {
+        System.out.println("Logout button clicked."); // Debug statement
+        try {
+            System.out.println(getClass().getResource("/org/example/glider8/Booking.fxml")); // Debug file path
+            Parent mainMenuRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Booking.fxml")));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(mainMenuRoot));
+            stage.setTitle("Book a Flight");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading Booking.fxml: " + e.getMessage());
         }
+    }
 
 
     @FXML
