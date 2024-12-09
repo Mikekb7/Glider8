@@ -146,6 +146,24 @@ public class ReservationsController {
     }
 
 
+        @FXML
+        private Button bookFlightButton; // Link to "Book a New Flight" button
+
+        @FXML
+        private void bookFlightButtonClick() {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Bookings.fxml"));
+                Parent bookingPage = loader.load();
+
+                Stage stage = (Stage) bookFlightButton.getScene().getWindow();
+                stage.setScene(new Scene(bookingPage));
+                stage.setTitle("Book a Flight - Glider");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error loading Bookings.fxml: " + e.getMessage());
+            }
+        }
+
 
     @FXML
     protected void logoutButtonClick(ActionEvent event) {
