@@ -64,7 +64,7 @@ public class ForgotPasswordController {
 
     @FXML
     private void backToLoginButtonClick(ActionEvent event) {
-        Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Sign Up");
+        Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Main Menu");
     }
 
 
