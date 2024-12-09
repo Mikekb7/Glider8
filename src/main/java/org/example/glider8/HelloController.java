@@ -217,25 +217,10 @@ private Button backToLoginButton;
     }
     @FXML
     private void forgotPasswordButtonClick(ActionEvent event) {
-        /*try {
-            System.out.println("Debug: Checking path for ForgotPassword.fxml...");//dont erase this
-            System.out.println(getClass().getResource("ForgotPassword.fxml")); //dont erase this
-
-            //FXMLLoader forgotPasswordLoader = new FXMLLoader(getClass().getResource("ForgotPassword.fxml"));
-            FXMLLoader forgotPasswordLoader = new FXMLLoader();
-
-            Parent forgotPasswordPage = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ForgotPassword.fxml")));
-            Stage forgotPasswordStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            forgotPasswordStage.setScene(new Scene(forgotPasswordPage));
-            forgotPasswordStage.setTitle("Forgot Password");
-            forgotPasswordStage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }*/
         Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Forgot Password");
     }
     private void signUpButtonClick(ActionEvent event) {
-        Actions.loadFXML(event, "/org/example/glider8/ForgetPassword.fxml", "Sign Up");
+        Actions.loadFXML(event, "/org/example/glider8/Register-view.fxml", "Sign Up");
     }
     /*private void loginButtonClick(ActionEvent event) {
         Actions.loadFXML(event, "/org/example/glider8/Reservations.fxml", "Forgot Password");
