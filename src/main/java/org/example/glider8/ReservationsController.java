@@ -148,7 +148,7 @@ public class ReservationsController {
 
 
     @FXML
-    private void logoutButtonClick(ActionEvent event) {
+    protected void logoutButtonClick(ActionEvent event) {
         System.out.println("Logout button clicked."); // Debug statement
         try {
             System.out.println(getClass().getResource("/org/example/glider8/MainMenu.fxml")); // Debug file path
@@ -162,6 +162,11 @@ public class ReservationsController {
         }
 
     }
+@FXML
+    protected void loginButtonClick( ){
+    System.out.println("Error loading MainMenu.fxml: ");
+
+}
 
 
 
