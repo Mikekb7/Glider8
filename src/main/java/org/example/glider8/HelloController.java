@@ -195,7 +195,7 @@ private Button backToLoginButton;
                     PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished(e -> {
                         try {
-                            FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("Reservations.fxml"));
+                            FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("AdminPage.fxml"));
                             Parent nextScene = reservationsLoader.load();
                             Scene reservationsScene = new Scene(nextScene);
                             Stage reserveStage = (Stage) adminLoginStatusLabel.getScene().getWindow();

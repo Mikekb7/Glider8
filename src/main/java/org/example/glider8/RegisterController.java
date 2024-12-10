@@ -3,6 +3,7 @@ package org.example.glider8;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.example.glider8.common.Actions;
 
 import java.sql.*;
 
@@ -59,6 +60,7 @@ public class RegisterController {
         // Called automatically when the FXML is loaded
         System.out.println("Sign Up Page Loaded Successfully!");
         signUpButton.setOnAction(this::handleSignUpAction);
+        backToLoginButton.setOnAction(this::backToLoginButtonClick);
     }
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
@@ -120,6 +122,10 @@ public class RegisterController {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while registering the user. Please try again.");
         }
+    }
+
+    public void backToLoginButtonClick(ActionEvent event) {
+        Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Main Menu");
     }
 
 

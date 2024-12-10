@@ -212,15 +212,15 @@ import java.sql.ResultSet;
 public class BookingController {
 
     @FXML
-    private TextField fromCityField;
+    private TextField fromCityField; // Input field for the departure city
     @FXML
-    private TextField toCityField;
+    private TextField toCityField; // Input field for the destination city
     @FXML
-    private DatePicker datePicker;
+    private DatePicker datePicker; // Date picker for the flight date
     @FXML
-    private TextField timeField;
+    private TextField timeField; // Input field for the flight time
     @FXML
-    private TableView<Flight> resultsTable;
+    private TableView<Flight> resultsTable; // Table to display search results
     @FXML
     private TableColumn<Flight, String> flightNumberColumn;
     @FXML
@@ -234,17 +234,18 @@ public class BookingController {
     @FXML
     private TableColumn<Flight, String> seatsColumn;
     @FXML
-    private Button searchButton;
+    private Button searchButton; // Button to search flights
     @FXML
-    private Button bookButton;
+    private Button bookButton; // Button to book flights
     @FXML
-    private Button backToLoginButton;
+    private Button backToLoginButton; // Button to return to the login page
 
     private Connection connection;
 
     public void initialize() {
         connectToDatabase();
 
+        // Bind table columns to the Flight model
         flightNumberColumn.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
         fromCityColumn.setCellValueFactory(new PropertyValueFactory<>("departureCity"));
         toCityColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
@@ -252,17 +253,18 @@ public class BookingController {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("departureTime"));
         seatsColumn.setCellValueFactory(new PropertyValueFactory<>("availableSeats"));
 
+        // Set default placeholder for the results table
         resultsTable.setPlaceholder(new Label("No flights found."));
 
+        // Attach actions to buttons
         searchButton.setOnAction(event -> searchFlights());
-        bookButton.setOnAction(event -> bookFlightButtonClick());
         backToLoginButton.setOnAction(event -> backToLoginClick());
     }
 
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
-        String username = "glider";
-        String password = "Gpassword123";
+        String username = "glider"; // Replace with your database username
+        String password = "Gpassword123"; // Replace with your database password
 
         try {
             connection = DriverManager.getConnection(url, username, password);
@@ -277,21 +279,21 @@ public class BookingController {
         String fromCity = fromCityField.getText().trim();
         String toCity = toCityField.getText().trim();
         String date = (datePicker.getValue() != null) ? datePicker.getValue().toString() : "";
+        String time = timeField.getText().trim();
 
-        if (fromCity.isEmpty() || toCity.isEmpty() || date.isEmpty()) {
+        // Validate input fields
+        if (fromCity.isEmpty() || toCity.isEmpty() || date.isEmpty() || time.isEmpty()) {
             resultsTable.setPlaceholder(new Label("Please fill in all fields to search for flights."));
             resultsTable.getItems().clear();
             return;
         }
 
-        // Clear previous search results
-        resultsTable.getItems().clear();
-
+        // Query to search for flights based on user input
         String query = """
             SELECT 
                 flight_number, 
                 departure_city, 
-                DATE(departure_time) AS departure_date, 
+                departure_time, 
                 destination_city, 
                 destination_time, 
                 airline, 
@@ -300,22 +302,23 @@ public class BookingController {
             FROM flights
             WHERE departure_city = ? 
               AND destination_city = ? 
-              AND DATE(departure_time) = ?
-            """;
+              AND departure_time LIKE ?;
+        """;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, fromCity);
             preparedStatement.setString(2, toCity);
-            preparedStatement.setString(3, date);
+            preparedStatement.setString(3, date + " " + time + "%"); // Match date and time
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 ObservableList<Flight> flights = FXCollections.observableArrayList();
 
+                // Map query results to Flight objects
                 while (resultSet.next()) {
                     flights.add(new Flight(
                             resultSet.getString("flight_number"),
                             resultSet.getString("departure_city"),
-                            resultSet.getString("departure_date"),
+                            resultSet.getString("departure_time"),
                             resultSet.getString("destination_city"),
                             resultSet.getString("destination_time"),
                             resultSet.getString("airline"),
@@ -325,43 +328,13 @@ public class BookingController {
                 }
 
                 if (flights.isEmpty()) {
-                    resultsTable.setPlaceholder(new Label("Sorry, no flights found :("));
+                    resultsTable.setPlaceholder(new Label("No flights found for the specified criteria."));
                 } else {
                     resultsTable.setItems(flights);
                 }
             }
         } catch (Exception e) {
             resultsTable.setPlaceholder(new Label("An error occurred while searching for flights."));
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void bookFlightButtonClick() {
-        Flight selectedFlight = resultsTable.getSelectionModel().getSelectedItem();
-        if (selectedFlight == null) {
-            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a flight to book.");
-            return;
-        }
-
-        if (Integer.parseInt(selectedFlight.getAvailableSeats()) <= 0) {
-            showAlert(Alert.AlertType.INFORMATION, "Flight Full", "This flight is fully booked.");
-            return;
-        }
-
-        String bookQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE flight_number = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(bookQuery)) {
-            preparedStatement.setString(1, selectedFlight.getFlightNumber());
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated > 0) {
-                showAlert(Alert.AlertType.INFORMATION, "Booking Confirmed", "Your flight has been booked successfully.");
-                searchFlights(); // Refresh the flight search results to update available seats
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Booking Failed", "An error occurred while booking the flight.");
-            }
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while updating the flight information.");
             e.printStackTrace();
         }
     }
@@ -380,14 +353,4 @@ public class BookingController {
             System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
         }
     }
-
-    private void showAlert(Alert.AlertType alertType, String title, String content) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
 }
-
-
