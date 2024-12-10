@@ -1,6 +1,6 @@
 package org.example.glider8;
 
-
+// Import necessary JavaFX and SQL classes
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,7 +23,9 @@ import java.util.Objects;
 
 
 public class HelloController {
-@FXML
+    // FXML elements defined in the corresponding FXML file
+
+    @FXML
 private TextField customerUsernameField;
 @FXML
 private TextField adminUsernameField;
@@ -50,44 +52,37 @@ private Button backToLoginButton;
 
 
 
-    private Connection connection;
+    private Connection connection; // Database connection object
 
 @FXML
     private void initialize() {
+    // Establish a database connection
         connection = DatabaseConnection.getConnection();
+    // Set actions for buttons
         customerLoginButton.setOnAction(e -> {
             try {
-                loginButtonClick(e);
+                loginButtonClick(e); // Call customer login logic
             } catch (Exception ex) {
+                // Display error message if login fails
                 customerLoginStatusLabel.setText("Error occurred while logging user to the system. Please try again." + ex.getMessage());
                 ex.printStackTrace();
             }
         });
     adminLoginButton.setOnAction(e -> {
         try {
-            adminLoginButtonClick(e);
+            adminLoginButtonClick(e); // Call admin login logic
         } catch (Exception ex) {
+            // Display error message if admin login fails
             adminLoginStatusLabel.setText("Error occurred while logging admin to the system. Please try again." + ex.getMessage());
             ex.printStackTrace();
         }
     });
-/*
-    private void initialize() {
-        customerLoginButton.setOnAction(e -> {
-            try {
-                adminLoginButton(e);
-            } catch (SQLException ex) {
-                adminLoginStatusLabel.setText("Error occurred while logging user to the system. Please try again." + ex.getMessage());
-                ex.printStackTrace();
-            }
-        });*/
+    // Set actions for forgot password and sign-up buttons
 
         forgotPasswordButton.setOnAction(this::forgotPasswordButtonClick);
         signUpButton.setOnAction(this::signUpButtonClick);
-
-        //backToLoginButton.setOnAction(this::forgotPasswordButtonClick);
     }
-
+    // Ensures the database connection is established
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
         String username = "glider"; // Replace with actual username
@@ -97,22 +92,12 @@ private Button backToLoginButton;
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Database connection established successfully.");
         } catch (SQLException e) {
+            // Display error message if database connection fails
             System.err.println("Error connecting to database: " + e.getMessage());
             customerLoginStatusLabel.setText("Failed to connect to database.");
         }
     }
-    /*
-      @FXML
-      private void loginButtonClick(ActionEvent event) {
-          Actions.handleLogin(
-                  connection,
-                  customerUsernameField,
-                  customerPasswordField,
-                  customerLoginStatusLabel,
-                  "Reservations.fxml"
-          );
-      }*/
-
+    // Handles customer login logic
       @FXML
       private void loginButtonClick(ActionEvent event) throws SQLException {
           String customerUsernameInput = customerUsernameField.getText().trim();
@@ -129,43 +114,48 @@ private Button backToLoginButton;
               customerLoginStatusLabel.setText("Database connection not available.");
               return;
           }
-
-         // loginButton.setText(("Executing log in: " + usernameInput + passwordInput));
-
+          //Query to check if user exists
           String loginQuery = "SELECT * FROM user where username = ? and password = ?";
 
           try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
+              // Set the username and password parameters
               preparedStatement.setString(1, customerUsernameInput);
               preparedStatement.setString(2, customerPasswordInput);
 
               try (ResultSet resultSet = preparedStatement.executeQuery()){
                   if (resultSet.next()){
+                      // Display success message if login is successful
                       customerLoginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
-
+                      // Navigate to Reservations.fxml after a delay
                       PauseTransition pause = new PauseTransition(Duration.seconds(1));
                       pause.setOnFinished(e -> {
                           try {
                               FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("Reservations.fxml"));
                               Parent nextScene = reservationsLoader.load();
                               Scene reservationsScene = new Scene(nextScene);
+                              // Set the scene to the primary stage and update its title
                               Stage reserveStage = (Stage) customerLoginStatusLabel.getScene().getWindow();
                               reserveStage.setScene(reservationsScene);
                               reserveStage.setTitle("Reservations");
                           } catch (Exception ex){
+                              // Display error message if navigation fails
                               ex.printStackTrace();
                           }
                       });
                       pause.play();
                   } else {
+                      // Display error message if login fails
                       customerLoginStatusLabel.setText("Login is unsuccessful. Please try again, " + resultSet.getString("username") + " :( ");
                   }
               }
           } catch (SQLException ex){
-              customerLoginStatusLabel.setText("Error executing login query: " + ex.getMessage());
+              // Display error message if user does not exist
+              customerLoginStatusLabel.setText("User does not exsit, please register.");
               ex.printStackTrace();
 
           }
       }
+      // Handles admin login logic
     @FXML
     private void adminLoginButtonClick(ActionEvent event) throws SQLException {
         String adminUsernameInput = adminUsernameField.getText().trim();
@@ -182,20 +172,22 @@ private Button backToLoginButton;
             customerLoginStatusLabel.setText("Database connection not available.");
             return;
         }
-
+        //Query to check if user exists
         String loginQuery = "SELECT * FROM user where username = ? and password = ? and role = 'admin'";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
+            // Set the username and password parameters
             preparedStatement.setString(1, adminUsernameInput);
             preparedStatement.setString(2, adminPasswordInput);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()){
                     adminLoginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
-
+                    // Navigate to AdminPage.fxml after a delay
                     PauseTransition pause = new PauseTransition(Duration.seconds(1));
                     pause.setOnFinished(e -> {
                         try {
+                            // Load the AdminPage.fxml file after the splash screen delay
                             FXMLLoader reservationsLoader = new FXMLLoader(getClass().getResource("AdminPage.fxml"));
                             Parent nextScene = reservationsLoader.load();
                             Scene reservationsScene = new Scene(nextScene);
@@ -205,32 +197,31 @@ private Button backToLoginButton;
                             ex.printStackTrace();
                         }
                     });
+                    // Start the delay for the splash screen transition
                     pause.play();
                 } else {
                     adminLoginStatusLabel.setText("Login is unsuccessful. Please try again, " + resultSet.getString("username") + " :( ");
                 }
             }
         } catch (SQLException ex){
-            adminLoginStatusLabel.setText("Error executing login query: " + ex.getMessage());
+            // Display error message if user does not exist
+            adminLoginStatusLabel.setText("User does not exsit, please register.");
             ex.printStackTrace();
 
         }
     }
+    // Handles forgot password button click
     @FXML
     private void forgotPasswordButtonClick(ActionEvent event) {
+        // Load the ForgotPassword.fxml file
         Actions.loadFXML(event, "/org/example/glider8/ForgotPassword.fxml", "Forgot Password");
     }
+    // Handles sign-up button click
     private void signUpButtonClick(ActionEvent event) {
         Actions.loadFXML(event, "/org/example/glider8/Register-view.fxml", "Sign Up");
     }
-    /*private void loginButtonClick(ActionEvent event) {
-        Actions.loadFXML(event, "/org/example/glider8/Reservations.fxml", "Forgot Password");
-    }
-    private void backToLoginClick(ActionEvent event) {
-        Actions.loadFXML(event, "/org/example/glider8/MainMenu.fxml", "Sign Up");
-    }*/
 
-
+    // Handles logout functionality
     @FXML
     private void logoutButtonClick(ActionEvent event) {
         System.out.println("Logout button clicked."); // Debug statement
@@ -247,7 +238,7 @@ private Button backToLoginButton;
 
     }
 
-    //backToLoginClick
+    // Getter and Setter methods for buttons
 @FXML
     private Button getSignUpButton() {
         return signUpButton;
