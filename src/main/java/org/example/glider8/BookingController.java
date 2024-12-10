@@ -348,6 +348,9 @@ public class BookingController {
             showAlert(Alert.AlertType.INFORMATION, "Flight Full", "This flight is fully booked.");
             return;
         }
+        if (isFlightAlreadyBooked(selectedFlight.getFlightNumber())) {
+            showAlert(Alert.AlertType.WARNING, "Flight Already Booked", "You have already booked this flight."); return;
+        }
 
         String bookQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE flight_number = ?";
 
@@ -364,6 +367,25 @@ public class BookingController {
             e.printStackTrace();
         }
     }
+    private boolean isFlightAlreadyBooked(String flightNumber) {
+        // Query to check if the flight is already booked by the user
+        String query = "SELECT COUNT(*) FROM bookings WHERE user_id = ? AND flight_number = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, getUserId()); // Adjust as per your logic to get the user ID
+            preparedStatement.setString(2, flightNumber);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next() && resultSet.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    } private String getUserId() { // Replace this with actual logic to retrieve the user ID
+        return "currentUserId";
+    }
+
 
     private void showAlertAndNavigate(String title, String content, Flight bookedFlight) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

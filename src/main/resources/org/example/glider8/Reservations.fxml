@@ -44,7 +44,7 @@
                   <!-- Book a New Flight Button -->
                   <Button fx:id="bookFlightButton" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Book a New Flight" onAction="#bookFlightButtonClick"/>
                   <!-- Cancel Flight Button -->
-                  <Button fx:id="cancelFlightButton" disable="true" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Cancel Selected Flight" />
+                  <Button fx:id="cancleFlight"  style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Cancle Flight" onAction="#bookFlightButtonClick"/>
               </HBox>
           </VBox>
            <Button fx:id="LogoutButton" layoutX="708.0" layoutY="580.0" onAction="#logoutButtonClick" style="-fx-font-size: 14; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Logout" />

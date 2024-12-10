@@ -103,24 +103,24 @@ public class ReservationsController {
 
         // Query the database to find flight information for the reservation
         String query = """
-            SELECT 
-                flights.flight_number,
-                flights.departure_city,
-                flights.departure_time,
-                flights.destination_city,
-                flights.destination_time,
-                flights.airline,
-                flights.available_seats,
-                flights.capacity
-            FROM 
-                reservations
-            JOIN 
-                flights 
-            ON 
-                reservations.flight_number = flights.flight_number
-            WHERE 
-                reservations.reservation_id = ?;
-            """;
+                SELECT 
+                    flights.flight_number,
+                    flights.departure_city,
+                    flights.departure_time,
+                    flights.destination_city,
+                    flights.destination_time,
+                    flights.airline,
+                    flights.available_seats,
+                    flights.capacity
+                FROM 
+                    reservations
+                JOIN 
+                    flights 
+                ON 
+                    reservations.flight_number = flights.flight_number
+                WHERE 
+                    reservations.reservation_id = ?;
+                """;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, reservationId);
@@ -177,7 +177,6 @@ public class ReservationsController {
         bookedFlightsTable.setItems(bookedFlights);
     }// Update the TableView with the new booking
 
-
     @FXML
     protected void logoutButtonClick(ActionEvent event) {
         System.out.println("Logout button clicked."); // Debug statement
@@ -193,15 +192,17 @@ public class ReservationsController {
         }
 
     }
-@FXML
-    protected void loginButtonClick( ){
-    System.out.println("Error loading MainMenu.fxml: ");
 
+    @FXML
+    protected void loginButtonClick( ) {
+        System.out.println("Error loading MainMenu.fxml: ");
+
+    }
 }
 
 
 
-}
+
 
 
 
