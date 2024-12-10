@@ -17,7 +17,7 @@
                 <!-- Main Content -->
           <VBox alignment="CENTER" prefHeight="566.0" prefWidth="799.0" spacing="20" style="-fx-padding: 20;">
               <!-- Welcome Message -->
-              <Label fx:id="welcomeLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, [User]!" />
+              <Label fx:id="welcomeLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome Glider!" />
               <TextField fx:id="reservationIdField" promptText="Enter your Reservation ID" style="-fx-font-size: 16; -fx-background-radius: 10;" />
               <Button mnemonicParsing="false" onAction="#handleEnterAction" prefHeight="25.0" prefWidth="81.0" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Enter" />
       
@@ -44,7 +44,7 @@
                   <!-- Book a New Flight Button -->
                   <Button fx:id="bookFlightButton" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Book a New Flight" onAction="#bookFlightButtonClick"/>
                   <!-- Cancel Flight Button -->
-                  <Button fx:id="cancleFlight"  style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Cancle Flight" onAction="#bookFlightButtonClick"/>
+                  <Button fx:id="cancelSelectedFlightButton" onAction="#handleCancelFlightButton" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Cancel Selected Flight" />
               </HBox>
           </VBox>
            <Button fx:id="LogoutButton" layoutX="708.0" layoutY="580.0" onAction="#logoutButtonClick" style="-fx-font-size: 14; -fx-background-color: white; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Logout" />

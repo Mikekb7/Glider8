@@ -150,6 +150,7 @@ private Button backToLoginButton;
                               Scene reservationsScene = new Scene(nextScene);
                               Stage reserveStage = (Stage) customerLoginStatusLabel.getScene().getWindow();
                               reserveStage.setScene(reservationsScene);
+                              reserveStage.setTitle("Reservations");
                           } catch (Exception ex){
                               ex.printStackTrace();
                           }
