@@ -18,6 +18,11 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Objects;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 public class ReservationsController {
 
     @FXML
@@ -48,6 +53,8 @@ public class ReservationsController {
     private Button LogoutButton; // Logout button
 
     private Connection connection;
+
+    private final ObservableList<Flight> bookedFlights = FXCollections.observableArrayList();
 
     public void initialize() {
         connectToDatabase();
@@ -164,6 +171,11 @@ public class ReservationsController {
             System.out.println("Error loading Booking.fxml: " + e.getMessage());
         }
     }
+
+    public void addBooking(Flight bookedFlight) {
+        bookedFlights.add(bookedFlight);
+        bookedFlightsTable.setItems(bookedFlights);
+    }// Update the TableView with the new booking
 
 
     @FXML
