@@ -196,7 +196,6 @@ package org.example.glider8;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -205,7 +204,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -214,15 +212,15 @@ import java.sql.ResultSet;
 public class BookingController {
 
     @FXML
-    private TextField fromCityField; // Input field for the departure city
+    private TextField fromCityField;
     @FXML
-    private TextField toCityField; // Input field for the destination city
+    private TextField toCityField;
     @FXML
-    private DatePicker datePicker; // Date picker for the flight date
+    private DatePicker datePicker;
     @FXML
-    private TextField timeField; // Input field for the flight time
+    private TextField timeField;
     @FXML
-    private TableView<Flight> resultsTable; // Table to display search results
+    private TableView<Flight> resultsTable;
     @FXML
     private TableColumn<Flight, String> flightNumberColumn;
     @FXML
@@ -236,20 +234,17 @@ public class BookingController {
     @FXML
     private TableColumn<Flight, String> seatsColumn;
     @FXML
-    private Button searchButton; // Button to search flights
+    private Button searchButton;
     @FXML
-    private Button bookButton; // Button to book flights
+    private Button bookButton;
     @FXML
-    private Button backToLoginButton; // Button to return to the login page
-    @FXML
-    private Button backToReservationsButton; // Button to return to the reservations page
+    private Button backToLoginButton;
 
     private Connection connection;
 
     public void initialize() {
         connectToDatabase();
 
-        // Bind table columns to the Flight model
         flightNumberColumn.setCellValueFactory(new PropertyValueFactory<>("flightNumber"));
         fromCityColumn.setCellValueFactory(new PropertyValueFactory<>("departureCity"));
         toCityColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
@@ -257,19 +252,17 @@ public class BookingController {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("departureTime"));
         seatsColumn.setCellValueFactory(new PropertyValueFactory<>("availableSeats"));
 
-        // Set default placeholder for the results table
         resultsTable.setPlaceholder(new Label("No flights found."));
 
-        // Attach actions to buttons
         searchButton.setOnAction(event -> searchFlights());
+        bookButton.setOnAction(event -> bookFlightButtonClick());
         backToLoginButton.setOnAction(event -> backToLoginClick());
-        backToReservationsButton.setOnAction(event -> backToReservationsClick());
     }
 
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
-        String username = "glider"; // Replace with your database username
-        String password = "Gpassword123"; // Replace with your database password
+        String username = "glider";
+        String password = "Gpassword123";
 
         try {
             connection = DriverManager.getConnection(url, username, password);
@@ -284,21 +277,21 @@ public class BookingController {
         String fromCity = fromCityField.getText().trim();
         String toCity = toCityField.getText().trim();
         String date = (datePicker.getValue() != null) ? datePicker.getValue().toString() : "";
-        String time = timeField.getText().trim();
 
-        // Validate input fields
-        if (fromCity.isEmpty() || toCity.isEmpty() || date.isEmpty() || time.isEmpty()) {
+        if (fromCity.isEmpty() || toCity.isEmpty() || date.isEmpty()) {
             resultsTable.setPlaceholder(new Label("Please fill in all fields to search for flights."));
             resultsTable.getItems().clear();
             return;
         }
 
-        // Query to search for flights based on user input
+        // Clear previous search results
+        resultsTable.getItems().clear();
+
         String query = """
             SELECT 
                 flight_number, 
                 departure_city, 
-                departure_time, 
+                DATE(departure_time) AS departure_date, 
                 destination_city, 
                 destination_time, 
                 airline, 
@@ -307,23 +300,22 @@ public class BookingController {
             FROM flights
             WHERE departure_city = ? 
               AND destination_city = ? 
-              AND departure_time LIKE ?;
-        """;
+              AND DATE(departure_time) = ?
+            """;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, fromCity);
             preparedStatement.setString(2, toCity);
-            preparedStatement.setString(3, date + " " + time + "%"); // Match date and time
+            preparedStatement.setString(3, date);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 ObservableList<Flight> flights = FXCollections.observableArrayList();
 
-                // Map query results to Flight objects
                 while (resultSet.next()) {
                     flights.add(new Flight(
                             resultSet.getString("flight_number"),
                             resultSet.getString("departure_city"),
-                            resultSet.getString("departure_time"),
+                            resultSet.getString("departure_date"),
                             resultSet.getString("destination_city"),
                             resultSet.getString("destination_time"),
                             resultSet.getString("airline"),
@@ -333,7 +325,7 @@ public class BookingController {
                 }
 
                 if (flights.isEmpty()) {
-                    resultsTable.setPlaceholder(new Label("No flights found for the specified criteria."));
+                    resultsTable.setPlaceholder(new Label("Sorry, no flights found :("));
                 } else {
                     resultsTable.setItems(flights);
                 }
@@ -345,6 +337,64 @@ public class BookingController {
     }
 
     @FXML
+    private void bookFlightButtonClick() {
+        Flight selectedFlight = resultsTable.getSelectionModel().getSelectedItem();
+        if (selectedFlight == null) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a flight to book.");
+            return;
+        }
+
+        if (Integer.parseInt(selectedFlight.getAvailableSeats()) <= 0) {
+            showAlert(Alert.AlertType.INFORMATION, "Flight Full", "This flight is fully booked.");
+            return;
+        }
+
+        String bookQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE flight_number = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(bookQuery)) {
+            preparedStatement.setString(1, selectedFlight.getFlightNumber());
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                showAlertAndNavigate("Booking Confirmed", "Your flight has been booked successfully.", selectedFlight);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Booking Failed", "An error occurred while booking the flight.");
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while updating the flight information.");
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlertAndNavigate(String title, String content, Flight bookedFlight) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                navigateToReservations(bookedFlight);
+            }
+        });
+    }
+
+    private void navigateToReservations(Flight bookedFlight) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Reservations.fxml"));
+            Parent reservationsRoot = loader.load();
+
+            ReservationsController reservationsController = loader.getController();
+            reservationsController.addBooking(bookedFlight);
+
+            Stage stage = (Stage) bookButton.getScene().getWindow();
+            stage.setScene(new Scene(reservationsRoot));
+            stage.setTitle("Your Reservations");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading Reservations.fxml: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void backToLoginClick() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/MainMenu.fxml"));
@@ -352,24 +402,18 @@ public class BookingController {
 
             Stage stage = (Stage) backToLoginButton.getScene().getWindow();
             stage.setScene(new Scene(mainMenuRoot));
-            stage.setTitle("Log in - Glider");
+            stage.setTitle("Main Menu - Glider");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
         }
     }
-    @FXML
-    private void backToReservationsClick() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Reservations.fxml"));
-            Parent mainMenuRoot = loader.load();
 
-            Stage stage = (Stage) backToReservationsButton.getScene().getWindow();
-            stage.setScene(new Scene(mainMenuRoot));
-            stage.setTitle("Reservations - Glider");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error loading Reservations.fxml: " + e.getMessage());
-        }
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
