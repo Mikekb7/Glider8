@@ -355,7 +355,18 @@ public class BookingController {
             preparedStatement.setString(1, selectedFlight.getFlightNumber());
             int rowsUpdated = preparedStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                showAlertAndNavigate("Booking Confirmed", "Your flight has been booked successfully.", selectedFlight);
+                showAlertAndNavigate("Booking Confirmed", "Your flight has been booked successfully.", new Reservations(
+                        "1",
+                        "user",
+                        selectedFlight.getFlightNumber(),
+                        selectedFlight.getDepartureCity(),
+                        selectedFlight.getDepartureTime(),
+                        selectedFlight.getDestinationCity(),
+                        selectedFlight.getDestinationTime(),
+                        selectedFlight.getAirline(),
+                        Integer.parseInt(selectedFlight.getAvailableSeats()),
+                        Integer.parseInt(selectedFlight.getCapacity())
+                ));
             } else {
                 showAlert(Alert.AlertType.ERROR, "Booking Failed", "An error occurred while booking the flight.");
             }
@@ -365,7 +376,7 @@ public class BookingController {
         }
     }
 
-    private void showAlertAndNavigate(String title, String content, Flight bookedFlight) {
+    private void showAlertAndNavigate(String title, String content, Reservations bookedFlight) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -377,7 +388,7 @@ public class BookingController {
         });
     }
 
-    private void navigateToReservations(Flight bookedFlight) {
+    private void navigateToReservations(Reservations bookedFlight) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Reservations.fxml"));
             Parent reservationsRoot = loader.load();
