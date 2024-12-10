@@ -1,18 +1,22 @@
 package org.example.glider8;
 
-public class Flight {
-    private String flightNumber;
-    private String departureCity;
+public class Reservations {
+    private final String reservationId;
+    private final String username;      // Other reservation fields
+    private final String flightNumber;
+    private final String departureCity;
     private String departureTime;
     private String destinationCity;
     private String destinationTime;
     private String airline;
-    private String availableSeats;
-    private String capacity;
+    private int availableSeats;
+    private int capacity;
 
-
-    public Flight(String flightNumber, String departureCity, String departureTime,
-                  String destinationCity, String destinationTime, String airline, String  availableSeats, String capacity) {
+    //Constructor
+    public Reservations(String reservationId, String username, String flightNumber, String departureCity, String departureTime,
+                        String destinationCity, String destinationTime, String airline, int availableSeats, int capacity) {
+        this.reservationId = reservationId;
+        this.username = username;
         this.flightNumber = flightNumber;
         this.departureCity = departureCity;
         this.departureTime = departureTime;
@@ -21,6 +25,14 @@ public class Flight {
         this.airline = airline;
         this.availableSeats = availableSeats;
         this.capacity = capacity;
+    }
+
+    public String getReservationId() {
+        return reservationId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getFlightNumber() {
@@ -47,12 +59,14 @@ public class Flight {
         return airline;
     }
 
-    public String getAvailableSeats() {
+    public int getAvailableSeats() {
         return availableSeats;
     }
 
-    public String getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
-
 }
+
+
+

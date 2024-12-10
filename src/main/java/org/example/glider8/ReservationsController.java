@@ -12,9 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
 import java.sql.*;
 import java.util.Objects;
 
@@ -23,26 +20,30 @@ public class ReservationsController {
     @FXML
     private TextField reservationIdField; // Field to input reservation ID
     @FXML
-    private TableView<Flight> bookedFlightsTable; // TableView to display flights
+    private TableView<Reservations> bookedFlightsTable; // TableView to display flights
     @FXML
-    private TableColumn<Flight, String> flightNumberColumn;
+    private TableColumn<Reservations, String> flightNumberColumn;
     @FXML
-    private TableColumn<Flight, String> departureCityColumn;
+    private TableColumn<Reservations, String> departureCityColumn;
     @FXML
-    private TableColumn<Flight, String> departureTime;
+    private TableColumn<Reservations, String> departureTime;
     @FXML
-    private TableColumn<Flight, String> destinationColumn;
+    private TableColumn<Reservations, String> destinationColumn;
     @FXML
-    private TableColumn<Flight, String> destinationTime;
+    private TableColumn<Reservations, String> destinationTime;
     @FXML
-    private TableColumn<Flight, String> airline;
+    private TableColumn<Reservations, String> airline;
     @FXML
-    private TableColumn<Flight, String> availableSeats;
+    private TableColumn<Reservations, Integer> availableSeats;
     @FXML
-    private TableColumn<Flight, String> capacity;
+    private TableColumn<Reservations, Integer> capacity;
+
 
     @FXML
     private Button bookFlightButton; // Link to "Book a New Flight" button
+
+    @FXML
+    private Button cancelSelectedFlightButton; // Link to "Book a New Flight" button
 
     @FXML
     private Button LogoutButton; // Logout button
@@ -64,7 +65,10 @@ public class ReservationsController {
 
         // Set the default placeholder for the TableView
         bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
+        bookedFlightsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multi-selection
         LogoutButton.setOnAction(this::logoutButtonClick);
+        cancelSelectedFlightButton.setOnAction(this::handleCancelFlightButton);
+
     }
 
     private void connectToDatabase() {
@@ -97,6 +101,9 @@ public class ReservationsController {
         // Query the database to find flight information for the reservation
         String query = """
             SELECT 
+                reservations.Reservation_ID,
+                reservations.Username,
+                reservations.Flight_Number,
                 flights.flight_number,
                 flights.departure_city,
                 flights.departure_time,
@@ -112,35 +119,37 @@ public class ReservationsController {
             ON 
                 reservations.flight_number = flights.flight_number
             WHERE 
-                reservations.reservation_id = ?;
+                reservations.Reservation_ID = ?;
             """;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, reservationId);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                ObservableList<Flight> flights = FXCollections.observableArrayList();
+                ObservableList<Reservations> reservations = FXCollections.observableArrayList();
 
                 // Add flight data to the list
                 while (resultSet.next()) {
-                    flights.add(new Flight(
+                    reservations.add(new Reservations(
+                            resultSet.getString("Reservation_ID"),
+                            resultSet.getString("Username"),
                             resultSet.getString("flight_number"),
                             resultSet.getString("departure_city"),
                             resultSet.getString("departure_time"),
                             resultSet.getString("destination_city"),
                             resultSet.getString("destination_time"),
                             resultSet.getString("airline"),
-                            resultSet.getString("available_seats"),
-                            resultSet.getString("capacity")
+                            resultSet.getInt("available_seats"),
+                            resultSet.getInt("capacity")
                     ));
                 }
 
-                if (flights.isEmpty()) {
+                if (reservations.isEmpty()) {
                     // If no flights are found, update the placeholder
                     bookedFlightsTable.setPlaceholder(new Label("Invalid reservation ID. No flights found."));
                 } else {
                     // Populate the TableView with flight data
-                    bookedFlightsTable.setItems(flights);
+                    bookedFlightsTable.setItems(reservations);
                 }
             }
         } catch (SQLException e) {
@@ -188,154 +197,48 @@ public class ReservationsController {
 }
 
 
+@FXML
+    private void handleCancelFlightButton(ActionEvent event) {
+    ObservableList<Reservations> selectedReservations = bookedFlightsTable.getSelectionModel().getSelectedItems();
 
-}
+        if (selectedReservations.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select at least one flight to cancel.");
+            return;
+        }
+
+    String deleteQuery = "DELETE FROM reservations WHERE Reservation_ID  = ?";
 
 
+    try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+            for (Reservations reservation : selectedReservations) {
+                String reservationId = reservation.getReservationId();
 
+                preparedStatement.setString(1, reservationId);
+                preparedStatement.addBatch(); // Batch the statements for efficiency
+            }
 
+            int[] rowsAffected = preparedStatement.executeBatch(); // Execute the batch delete
+            System.out.println("Deleted " + rowsAffected.length + " reservations.");
 
-
-
-
-/*import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-import javafx.scene.control.Label;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-public class ReservationsController {
-
-   /* @FXML
-    private Button mainMenuButton;
-
-    @FXML
-    private Label welcomeLabel;
-
-    @FXML
-    private TextField reservationIdField;
-
- /*     @FXML
-        private TableView<Flights> bookedFlightsTable;
-
-        @FXML
-        private TableColumn<Flights, String> flightNumberColumn;
-
-        @FXML
-        private TableColumn<Flights, String> departureCityColumn;
-
-        @FXML
-        private TableColumn<Flights, String> departureTimeColumn;
-
-        @FXML
-        private TableColumn<Flights, String> destinationColumn;
-
-        @FXML
-        private TableColumn<Flights, String> destinationTimeColumn;
-
-        @FXML
-        private TableColumn<Flights, String> airlineColumn;
-
-        @FXML
-        private Button bookFlightButton;
-
-        private final ObservableList<Flights> flightData = FXCollections.observableArrayList();
-*/
-    /*public void initialize() {
-
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Selected reservations have been canceled.");
+            bookedFlightsTable.getItems().removeAll(selectedReservations); // Remove the flights from the TableView
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while canceling reservations.");
+        }
     }
-}
-            // Load the flight data into the table
- /*           loadAvailableFlights();
-        }
 
-       private void loadAvailableFlights() {
-            flightData.clear(); // Clear any previous data
-
-            String url = "jdbc:mysql://localhost:3306/your_database_name";
-            String user = "your_database_user";
-            String password = "your_database_password";
-
-            String query = "SELECT flight_number, departure_city, departure_time, destination_city, destination_time, airline FROM flights WHERE available_seats > 0";
-
-            try (Connection connection = DriverManager.getConnection(url, user, password);
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    Flights flight = new Flights(
-                            resultSet.getString("flight_number"),
-                            resultSet.getString("departure_city"),
-                            resultSet.getString("departure_time"),
-                            resultSet.getString("destination_city"),
-                            resultSet.getString("destination_time"),
-                            resultSet.getString("airline")
-                    );
-                    flightData.add(flight); // Add each flight to the observable list
-                }
-
-                bookedFlightsTable.setItems(flightData); // Bind data to the table
-
-            } catch (Exception e) {
-                showAlert("Error", "Unable to load flights: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-        @FXML
-        private void handleBookFlightButtonClick() {
-            try {
-                // Load the new FXML for the booking page
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("BookFlightForm.fxml"));
-                Parent bookingPage = loader.load();
-
-                // Set up a new scene and stage for the booking page
-                Stage stage = (Stage) bookFlightButton.getScene().getWindow(); // Get current stage
-                stage.setScene(new Scene(bookingPage));
-                stage.setTitle("Book a Flight");
-                stage.show();
-
-            } catch (Exception e) {
-                showAlert("Error", "Unable to navigate to the booking page: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-        @FXML
-        private void handleMainMenuButtonClick() {
-            try {
-                // Load the main menu FXML
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
-                Parent mainMenuPage = loader.load();
-
-                // Set up a new scene and stage for the main menu
-                Stage stage = (Stage) mainMenuButton.getScene().getWindow(); // Get current stage
-                stage.setScene(new Scene(mainMenuPage));
-                stage.setTitle("Main Menu");
-                stage.show();
-
-            } catch (Exception e) {
-                showAlert("Error", "Unable to navigate to the main menu: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-        private void showAlert(String title, String message) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        private void showAlert(Alert.AlertType alertType, String title, String message) {
+            Alert alert = new Alert(alertType);
             alert.setTitle(title);
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
         }
-    }
-}*/
+}
+
+
+
+
+
+
