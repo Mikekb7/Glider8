@@ -32,7 +32,7 @@
                       <TableColumn fx:id="availableSeats" prefWidth="105.0" text="Available Seats" />
                       <TableColumn fx:id="capacity" prefWidth="105.0" text="Capacity" />
       
-                        </columns>
+                  </columns>
                   <!-- Placeholder for Empty Table -->
                   <placeholder>
                       <Label style="-fx-font-size: 16; -fx-text-fill: grey;" text="You have no booked flights." />

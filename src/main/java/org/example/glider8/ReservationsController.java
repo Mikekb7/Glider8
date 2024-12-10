@@ -55,7 +55,7 @@ public class ReservationsController {
 
     private Connection connection;
 
-    private final ObservableList<Flight> bookedFlights = FXCollections.observableArrayList();
+    private final ObservableList<Reservations> bookedFlights = FXCollections.observableArrayList();
 
     public void initialize() {
         connectToDatabase();
@@ -67,10 +67,9 @@ public class ReservationsController {
         destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
         destinationTime.setCellValueFactory(new PropertyValueFactory<>("destinationTime"));
         airline.setCellValueFactory(new PropertyValueFactory<>("airline"));
-        availableSeats.setCellValueFactory(new PropertyValueFactory<>("seatsAvailable"));
+        availableSeats.setCellValueFactory(new PropertyValueFactory<>("availableSeats"));
         capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 
-        // Set the default placeholder for the TableView
         bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
         bookedFlightsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multi-selection
         LogoutButton.setOnAction(this::logoutButtonClick);
@@ -150,6 +149,7 @@ public class ReservationsController {
                             resultSet.getInt("capacity")
                     ));
                 }
+                bookedFlightsTable.setItems(reservations);
 
                 if (reservations.isEmpty()) {
                     // If no flights are found, update the placeholder
@@ -181,8 +181,8 @@ public class ReservationsController {
         }
     }
 
-    public void addBooking(Flight bookedFlight) {
-        bookedFlights.add(bookedFlight);
+    public void addBooking(Reservations reservation) {
+        bookedFlights.add(reservation);
         bookedFlightsTable.setItems(bookedFlights);
     }// Update the TableView with the new booking
 
