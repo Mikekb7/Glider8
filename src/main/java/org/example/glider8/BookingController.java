@@ -249,6 +249,7 @@ public class BookingController {
         });
     }
     //     // Method to navigate to the Reservations screen
+    //lo
     @FXML
     private void navigateToReservations(Reservations bookedFlight) {
         try {
