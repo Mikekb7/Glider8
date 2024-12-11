@@ -159,29 +159,37 @@ public class BookingController {
             return;// Show an information alert if the flight is fully booked
         }
 
+        String username = Session.getUsername();
+        if (username == null) {
+            showAlert(Alert.AlertType.ERROR, "User Not Logged In", "Please log in to book a flight.");
+            return;
+        }
+
+
+
+        String insertReservationQuery = "INSERT INTO reservations (username, flight_number) VALUES (?, ?)";
         String bookQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE flight_number = ?"; // Query to book the selected flight
-        try (PreparedStatement preparedStatement = connection.prepareStatement(bookQuery)) {
-            preparedStatement.setString(1, selectedFlight.getFlightNumber()); // Set the flight number in the query to the selected flight number
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated > 0) { // Check if the query was successful
-                showAlertAndNavigate("Booking Confirmed", "Your flight has been booked successfully.", new Reservations(
-                        "1",
-                        "user",
-                        selectedFlight.getFlightNumber(),
-                        selectedFlight.getDepartureCity(),
-                        selectedFlight.getDepartureTime(),
-                        selectedFlight.getDestinationCity(),
-                        selectedFlight.getDestinationTime(),
-                        selectedFlight.getAirline(),
-                        Integer.parseInt(selectedFlight.getAvailableSeats()),
-                        Integer.parseInt(selectedFlight.getCapacity())
-                ));
-            } else { // Show an error message if the query failed
-                showAlert(Alert.AlertType.ERROR, "Booking Failed", "An error occurred while booking the flight.");
-            }
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while updating the flight information.");
+        try (PreparedStatement reservationStatement = connection.prepareStatement(insertReservationQuery);
+             PreparedStatement flightUpdateStatement = connection.prepareStatement(bookQuery)) {
+
+
+            //preparedStatement.setString(1, selectedFlight.getFlightNumber()); // Set the flight number in the query to the selected flight number
+            // Insert reservation
+            reservationStatement.setString(1, username);
+            reservationStatement.setString(2, selectedFlight.getFlightNumber());
+            reservationStatement.executeUpdate();
+
+            // Update flight availability
+            flightUpdateStatement.setString(1, selectedFlight.getFlightNumber());
+            flightUpdateStatement.executeUpdate();
+
+            showAlert(Alert.AlertType.INFORMATION, "Booking Confirmed", "Your flight has been booked successfully!");
+            selectedFlight.setAvailableSeats(String.valueOf(Integer.parseInt(selectedFlight.getAvailableSeats()) - 1));
+            resultsTable.refresh();
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while booking the flight.");
         }
     }
     /*

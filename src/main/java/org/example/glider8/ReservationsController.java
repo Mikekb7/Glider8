@@ -23,6 +23,10 @@ import java.sql.ResultSet;
 public class ReservationsController {
     // FXML elements defined in the corresponding FXML file
     @FXML
+    private TextField usernameField; // Field to input username
+    @FXML
+    private Label welcomeLabel; // Field to input username
+    @FXML
     private TextField reservationIdField; // Field to input reservation ID
     @FXML
     private TableView<Reservations> bookedFlightsTable; // TableView to display flights
@@ -73,6 +77,7 @@ public class ReservationsController {
         bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
         bookedFlightsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multi-selection
         LogoutButton.setOnAction(this::logoutButtonClick);
+        loadReservations();
 
     }
     // Connect to the database
@@ -89,21 +94,26 @@ public class ReservationsController {
         }
     }
     // Handle the "Enter" button action
+
+
     @FXML
     private void handleEnterAction() {// Get the reservation ID from the input field
-        String reservationId = reservationIdField.getText().trim();
+        String usernameInput = usernameField.getText().trim();
+        String reservationIdInput  = reservationIdField.getText().trim();
 // Validate the input
-        if (reservationId.isEmpty()) {
-            bookedFlightsTable.setPlaceholder(new Label("Please enter a reservation ID."));
+        if (!usernameInput.isEmpty()) {
+            fetchReservationsByUsername(usernameInput);
+        } else if (!reservationIdInput.isEmpty()) {
+            fetchReservationById(reservationIdInput);
+        } else {
+            bookedFlightsTable.setPlaceholder(new Label("Please enter a username or reservation ID."));
             bookedFlightsTable.getItems().clear();
-            return;
+        }
         }
 
-        // Clear previous data from the TableView
-        bookedFlightsTable.getItems().clear(); // Clear the TableView
 
         // Query the database to find flight information for the reservation
-        String query = """
+        /*String query = """
             SELECT 
                 reservations.Reservation_ID,
                 reservations.Username,
@@ -161,7 +171,102 @@ public class ReservationsController {
             bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching the reservation."));
             e.printStackTrace();
         }
+    }*/
+
+
+    private void fetchReservationsByUsername(String username) {
+        String query = """
+            SELECT 
+                reservations.Reservation_ID,
+                reservations.Username,
+                reservations.Flight_Number,
+                flights.flight_number,
+                flights.departure_city,
+                flights.departure_time,
+                flights.destination_city,
+                flights.destination_time,
+                flights.airline,
+                flights.available_seats,
+                flights.capacity
+            FROM 
+                reservations
+            JOIN 
+                flights 
+            ON 
+                reservations.flight_number = flights.flight_number
+            WHERE 
+                reservations.Username = ?;
+        """;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+            executeQueryAndUpdateTable(preparedStatement);
+        } catch (SQLException e) {
+            bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching reservations."));
+            e.printStackTrace();
+        }
     }
+
+    private void fetchReservationById(String reservationId) {
+        String query = """
+            SELECT 
+                reservations.Reservation_ID,
+                reservations.Username,
+                reservations.Flight_Number,
+                flights.flight_number,
+                flights.departure_city,
+                flights.departure_time,
+                flights.destination_city,
+                flights.destination_time,
+                flights.airline,
+                flights.available_seats,
+                flights.capacity
+            FROM 
+                reservations
+            JOIN 
+                flights 
+            ON 
+                reservations.flight_number = flights.flight_number
+            WHERE 
+                reservations.Reservation_ID = ?;
+        """;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, reservationId);
+            executeQueryAndUpdateTable(preparedStatement);
+        } catch (SQLException e) {
+            bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching the reservation."));
+            e.printStackTrace();
+        }
+    }
+
+    private void executeQueryAndUpdateTable(PreparedStatement preparedStatement) throws SQLException {
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            bookedFlights.clear();
+            while (resultSet.next()) {
+                bookedFlights.add(new Reservations(
+                        resultSet.getString("Reservation_ID"),
+                        resultSet.getString("Username"),
+                        resultSet.getString("flight_number"),
+                        resultSet.getString("departure_city"),
+                        resultSet.getString("departure_time"),
+                        resultSet.getString("destination_city"),
+                        resultSet.getString("destination_time"),
+                        resultSet.getString("airline"),
+                        resultSet.getInt("available_seats"),
+                        resultSet.getInt("capacity")
+                ));
+            }
+            bookedFlightsTable.setItems(bookedFlights);
+
+            if (bookedFlights.isEmpty()) {
+                bookedFlightsTable.setPlaceholder(new Label("No reservations found."));
+            }
+        }
+    }
+
+
+
     // Handle the "Book a New Flight" button click
     @FXML
     protected void bookFlightButtonClick(ActionEvent event) {// Load the Booking.fxml file when the button is clicked
@@ -245,6 +350,70 @@ public class ReservationsController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    private void loadReservations() {
+        String username = Session.getUsername(); // Fetch the logged-in user's username
+        if (username == null) {
+            bookedFlightsTable.setPlaceholder(new Label("Please log in to view your reservations."));
+            return;
+        }
+
+        String query = """
+        SELECT 
+            reservations.Reservation_ID, 
+            reservations.Flight_Number, 
+            flights.departure_city, 
+            flights.departure_time, 
+            flights.destination_city, 
+            flights.destination_time, 
+            flights.airline
+        FROM 
+            reservations
+        JOIN 
+            flights 
+        ON 
+            reservations.flight_number = flights.flight_number
+        WHERE 
+            reservations.username = ?;
+    """;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                ObservableList<Reservations> reservations = FXCollections.observableArrayList();
+
+                while (resultSet.next()) {
+                    reservations.add(new Reservations(
+                            resultSet.getString("Reservation_ID"),
+                            username,
+                            resultSet.getString("Flight_Number"),
+                            resultSet.getString("departure_city"),
+                            resultSet.getString("departure_time"),
+                            resultSet.getString("destination_city"),
+                            resultSet.getString("destination_time"),
+                            resultSet.getString("airline"),
+                            0, // Available seats (not used in reservations view)
+                            0  // Capacity (not used in reservations view)
+                    ));
+                }
+
+                bookedFlightsTable.setItems(reservations);
+
+                if (reservations.isEmpty()) {
+                    bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching reservations."));
+        }
+    }
+
+
+
+
+
 }
 
 

@@ -125,8 +125,12 @@ private Button backToLoginButton;
               try (ResultSet resultSet = preparedStatement.executeQuery()){
                   if (resultSet.next()){
                       // Display success message if login is successful
+                      Session.setCredentials(customerUsernameInput, customerPasswordInput);
+
                       customerLoginStatusLabel.setText("Login is successful. Welcome, " + resultSet.getString("username") + " :) ");
                       // Navigate to Reservations.fxml after a delay
+
+
                       PauseTransition pause = new PauseTransition(Duration.seconds(1));
                       pause.setOnFinished(e -> {
                           try {
