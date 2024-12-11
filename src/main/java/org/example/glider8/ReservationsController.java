@@ -199,7 +199,7 @@ public class ReservationsController {
         """;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, username);
+            preparedStatement.setString(1, Session.getUsername());
             executeQueryAndUpdateTable(preparedStatement);
         } catch (SQLException e) {
             bookedFlightsTable.setPlaceholder(new Label("An error occurred while fetching reservations."));

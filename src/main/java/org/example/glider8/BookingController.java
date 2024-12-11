@@ -173,9 +173,9 @@ public class BookingController {
              PreparedStatement flightUpdateStatement = connection.prepareStatement(bookQuery)) {
 
 
-            //preparedStatement.setString(1, selectedFlight.getFlightNumber()); // Set the flight number in the query to the selected flight number
+
             // Insert reservation
-            reservationStatement.setString(1, username);
+            reservationStatement.setString(1, Session.getUsername());
             reservationStatement.setString(2, selectedFlight.getFlightNumber());
             reservationStatement.executeUpdate();
 

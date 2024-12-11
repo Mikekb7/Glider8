@@ -114,8 +114,8 @@ public class RegisterController {
             preparedStatement.setString(7, city);
             preparedStatement.setString(8, state);
             preparedStatement.setString(9, zipCode);
-            preparedStatement.setString(11, securityAnswer);
-            preparedStatement.setString(12, ssn);
+            preparedStatement.setString(10, securityAnswer);
+            preparedStatement.setString(11, ssn);
 
 
             int rowsAffected = preparedStatement.executeUpdate(); // Execute the query and get the number of rows affected
