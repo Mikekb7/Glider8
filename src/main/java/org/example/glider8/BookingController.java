@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.sql.*;
 
 public class BookingController {
-//     // FXML elements defined in the corresponding FXML file
+    //     // FXML elements defined in the corresponding FXML file
     @FXML
     private TextField fromCityField;
     @FXML
@@ -66,7 +66,7 @@ public class BookingController {
         searchButton.setOnAction(event -> searchFlights());
         bookButton.setOnAction(event -> bookFlightButtonClick());
         backToLoginButton.setOnAction(event -> backToLoginClick());
-        cancelSelectedFlightButton.setOnAction(this::handleCancelFlightButton);
+        //cancelSelectedFlightButton.setOnAction(this::handleCancelFlightButton);
 
     }
 
@@ -94,8 +94,7 @@ public class BookingController {
             resultsTable.getItems().clear();
             return;
         }
-
-        // Clear previous search results
+// Clear previous search results
         resultsTable.getItems().clear();
 //         // Query to search for flights based on the user input
         String query = """
@@ -159,12 +158,8 @@ public class BookingController {
             showAlert(Alert.AlertType.INFORMATION, "Flight Full", "This flight is fully booked.");
             return;// Show an information alert if the flight is fully booked
         }
-        if (isFlightAlreadyBooked(selectedFlight.getFlightNumber())) {
-            showAlert(Alert.AlertType.WARNING, "Flight Already Booked", "You have already booked this flight."); return;
-        }
 
         String bookQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE flight_number = ?"; // Query to book the selected flight
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(bookQuery)) {
             preparedStatement.setString(1, selectedFlight.getFlightNumber()); // Set the flight number in the query to the selected flight number
             int rowsUpdated = preparedStatement.executeUpdate();
@@ -189,26 +184,51 @@ public class BookingController {
             e.printStackTrace();
         }
     }
-    private boolean isFlightAlreadyBooked(String flightNumber) {
-        // Query to check if the flight is already booked by the user
-        String query = "SELECT COUNT(*) FROM bookings WHERE user_id = ? AND flight_number = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, getUserId()); // Adjust as per your logic to get the user ID
-            preparedStatement.setString(2, flightNumber);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next() && resultSet.getInt(1) > 0) {
-                    return true;
-                }
+    /*
+        @FXML
+        private void bookFlightButtonClick() {
+            Flight selectedFlight = resultsTable.getSelectionModel().getSelectedItem();
+
+            if (selectedFlight == null) {
+                showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a flight to book.");
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            if (Integer.parseInt(selectedFlight.getAvailableSeats()) <= 0) {
+                showAlert(Alert.AlertType.INFORMATION, "Flight Full", "This flight is fully booked.");
+                return;
+            }
+
+            // Insert reservation into the database
+            String insertReservationQuery = "INSERT INTO reservations (username, flight_number) VALUES (?, ?)";
+            String updateFlightQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE flight_number = ?";
+
+            try (PreparedStatement reservationStatement = connection.prepareStatement(insertReservationQuery);
+                 PreparedStatement flightUpdateStatement = connection.prepareStatement(updateFlightQuery)) {
+
+                // Insert reservation
+                reservationStatement.setString(1, "user"); // Replace with the actual username (dynamic if needed)
+                reservationStatement.setString(2, selectedFlight.getFlightNumber());
+                reservationStatement.executeUpdate();
+
+                // Update flight availability
+                flightUpdateStatement.setString(1, selectedFlight.getFlightNumber());
+                int rowsUpdated = flightUpdateStatement.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    showAlert(Alert.AlertType.INFORMATION, "Booking Confirmed", "Your flight has been booked successfully!");
+                    selectedFlight.setAvailableSeats(String.valueOf(Integer.parseInt(selectedFlight.getAvailableSeats()) - 1));
+                    resultsTable.refresh();
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Booking Failed", "An error occurred while updating the flight information.");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while booking the flight.");
+            }
         }
-        return false;
-    } private String getUserId() { // Replace this with actual logic to retrieve the user ID
-        return "currentUserId";
-    }
-
-
+    */
     private void showAlertAndNavigate(String title, String content, Reservations bookedFlight) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -220,7 +240,8 @@ public class BookingController {
             }
         });
     }
-//     // Method to navigate to the Reservations screen
+    //     // Method to navigate to the Reservations screen
+    @FXML
     private void navigateToReservations(Reservations bookedFlight) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Reservations.fxml"));
@@ -252,6 +273,7 @@ public class BookingController {
             System.out.println("Error loading MainMenu.fxml: " + e.getMessage());
         }
     }
+
 
     @FXML
     private void handleCancelFlightButton(ActionEvent event) {// Get the selected reservations from the TableView

@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class ReservationsController {
-// FXML elements defined in the corresponding FXML file
+    // FXML elements defined in the corresponding FXML file
     @FXML
     private TextField reservationIdField; // Field to input reservation ID
     @FXML
@@ -54,7 +54,7 @@ public class ReservationsController {
     private Button LogoutButton; // Logout button
 
     private Connection connection;
-// ObservableList to store booked flights
+    // ObservableList to store booked flights
     private final ObservableList<Reservations> bookedFlights = FXCollections.observableArrayList(); // List of booked flights
 
     public void initialize() {
@@ -75,7 +75,7 @@ public class ReservationsController {
         LogoutButton.setOnAction(this::logoutButtonClick);
 
     }
-// Connect to the database
+    // Connect to the database
     private void connectToDatabase() {
         String url = "jdbc:mysql://gliderserver.mysql.database.azure.com:3306/gliderdatabase?useSSL=true&serverTimezone=UTC";
         String username = "glider"; // Replace with your database username
@@ -88,12 +88,11 @@ public class ReservationsController {
             System.err.println("Error connecting to database: " + e.getMessage());
         }
     }
-// Handle the "Enter" button action
+    // Handle the "Enter" button action
     @FXML
     private void handleEnterAction() {// Get the reservation ID from the input field
         String reservationId = reservationIdField.getText().trim();
-
-        // Validate the input
+// Validate the input
         if (reservationId.isEmpty()) {
             bookedFlightsTable.setPlaceholder(new Label("Please enter a reservation ID."));
             bookedFlightsTable.getItems().clear();
@@ -163,8 +162,7 @@ public class ReservationsController {
             e.printStackTrace();
         }
     }
-
-// Handle the "Book a New Flight" button click
+    // Handle the "Book a New Flight" button click
     @FXML
     protected void bookFlightButtonClick(ActionEvent event) {// Load the Booking.fxml file when the button is clicked
         System.out.println("Logout button clicked."); // Debug statement
@@ -180,13 +178,13 @@ public class ReservationsController {
             System.out.println("Error loading Booking.fxml: " + e.getMessage());
         }
     }
-// Add a new booking to the TableView
+    // Add a new booking to the TableView
     public void addBooking(Reservations reservation) {
         bookedFlights.add(reservation);
         bookedFlightsTable.setItems(bookedFlights); // Update the TableView with the new booking
     }// Update the TableView with the new booking
 
-// Handle the "Logout" button click
+    // Handle the "Logout" button click
     @FXML
     protected void logoutButtonClick(ActionEvent event) {// Load the MainMenu.fxml file when the button is clicked
         System.out.println("Logout button clicked."); // Debug statement
@@ -203,26 +201,25 @@ public class ReservationsController {
 
     }
     //
-@FXML
+    @FXML
     protected void loginButtonClick( ) {
-    System.out.println("Error loading MainMenu.fxml: ");// Debug statement
+        System.out.println("Error loading MainMenu.fxml: ");// Debug statement
 
-}
+    }
 
-//
-@FXML
+    //
+    @FXML
     private void handleCancelFlightButton(ActionEvent event) {// Get the selected reservations from the TableView
-    ObservableList<Reservations> selectedReservations = bookedFlightsTable.getSelectionModel().getSelectedItems();
+        ObservableList<Reservations> selectedReservations = bookedFlightsTable.getSelectionModel().getSelectedItems();
 // Check if any reservations are selected
         if (selectedReservations.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select at least one flight to cancel.");
             return;
         }
 // Prepare the SQL query to delete the selected reservations
-    String deleteQuery = "DELETE FROM reservations WHERE Reservation_ID  = ?";
-
+        String deleteQuery = "DELETE FROM reservations WHERE Reservation_ID  = ?";
 // Execute the batch delete operation
-    try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
             for (Reservations reservation : selectedReservations) {
                 String reservationId = reservation.getReservationId();
 // Set the reservation ID in the prepared statement
@@ -240,14 +237,14 @@ public class ReservationsController {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while canceling reservations.");
         }
     }
-// Show an alert with the specified type, title, and message
-        private void showAlert(Alert.AlertType alertType, String title, String message) {
-            Alert alert = new Alert(alertType);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        }
+    // Show an alert with the specified type, title, and message
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
 
 

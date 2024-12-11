@@ -11,9 +11,9 @@ public class Flight {
     private String availableSeats;
     private String capacity;
 
-// Constructor for the Flight class
+    // Constructor for the Flight class
     public Flight(String flightNumber, String departureCity, String departureTime,
-                  String destinationCity, String destinationTime, String airline, String  availableSeats, String capacity) {// Initialize the fields with the provided values
+                  String destinationCity, String destinationTime, String airline, String availableSeats, String capacity) {
         this.flightNumber = flightNumber;
         this.departureCity = departureCity;
         this.departureTime = departureTime;
@@ -24,36 +24,69 @@ public class Flight {
         this.capacity = capacity;
     }
 
+    // Getter methods
     public String getFlightNumber() {
         return flightNumber;
-    }// Getter methods for the fields
+    }
 
     public String getDepartureCity() {
         return departureCity;
-    }// Getter methods for the fields
+    }
 
     public String getDepartureTime() {
         return departureTime;
-    } // Getter methods for the fields
+    }
 
     public String getDestinationCity() {
         return destinationCity;
-    }//
+    }
 
     public String getDestinationTime() {
         return destinationTime;
-    }// Getter methods for the fields
+    }
 
     public String getAirline() {
         return airline;
-    } // Getter methods for the fields
+    }
 
     public String getAvailableSeats() {
         return availableSeats;
-    } // Getter methods for the fields
+    }
 
     public String getCapacity() {
         return capacity;
-    } // Getter methods for the fields
+    }
 
+    // Setter methods
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
+    }
+
+    public void setDestinationTime(String destinationTime) {
+        this.destinationTime = destinationTime;
+    }
+
+    public void setAirline(String airline) {
+        this.airline = airline;
+    }
+
+    public void setAvailableSeats(String availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
 }
