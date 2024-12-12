@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.glider8.AdminPageController">
+<StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.glider8.AdminPageController">
 
 
     <!-- Main Content -->
     <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
         <!-- Welcome Message -->
         <Label fx:id="welcomeLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome Admin!" />
-        <HBox spacing="10">
+        <HBox alignment="CENTER" spacing="10">
             <TextField fx:id="flightNumberField" prefWidth="200.0" promptText="Flight Number" style="-fx-background-radius: 10; -fx-padding: 5;" />
             <TextField fx:id="departureCityField" prefWidth="200.0" promptText="Departure City" style="-fx-background-radius: 10; -fx-padding: 5;" />
-            <TextField fx:id="departureTimeField" prefWidth="200.0" promptText="Departure Time" style="-fx-background-radius: 10; -fx-padding: 5;" />
             <TextField fx:id="destinationCityField" prefWidth="200.0" promptText="Destination City" style="-fx-background-radius: 10; -fx-padding: 5;" />
         </HBox>
-        <HBox spacing="10">
-            <TextField fx:id="destinationTimeField" prefWidth="200.0" promptText="Destination Time" style="-fx-background-radius: 10; -fx-padding: 5;" />
+        <HBox alignment="CENTER" spacing="10">
             <TextField fx:id="airlineField" prefWidth="200.0" promptText="Airline" style="-fx-background-radius: 10; -fx-padding: 5;" />
             <TextField fx:id="availableSeatsField" prefWidth="200.0" promptText="Available Seats" style="-fx-background-radius: 10; -fx-padding: 5;" />
             <TextField fx:id="capacityField" prefWidth="200.0" promptText="Capacity" style="-fx-background-radius: 10; -fx-padding: 5;" />
         </HBox>
         <HBox alignment="CENTER" spacing="10">
+            <TextField fx:id="destinationTimeField" prefWidth="300.0" promptText="Destination Time (YYYY-MM-DD 08:00:00)" style="-fx-background-radius: 10; -fx-padding: 5;" />
+            <TextField fx:id="departureTimeField" prefWidth="300.0" promptText="Departure Time (YYYY-MM-DD 08:00:00)" style="-fx-background-radius: 10; -fx-padding: 5;" />
+        </HBox>
+        <HBox alignment="CENTER" spacing="10">
             <Button fx:id="addFlightButton" onAction="#addFlight" prefHeight="25.0" prefWidth="130.0" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Add a Flight" />
             <Button fx:id="updateFlightButton" onAction="#handleUpdateButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Update a Flight" />
+            <Button fx:id="deleteFlightButton" onAction="#deleteFlight" prefHeight="25.0" prefWidth="150.0" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="Delete a Flight" />
+
         </HBox>
 
         <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" style="-fx-padding: 10;">
@@ -58,7 +55,7 @@
         <!-- Action Buttons -->
         <HBox alignment="CENTER" spacing="20">
             <!-- Book a New Flight Button -->
-            <Button fx:id="allFlights" onAction="#viewAllFlights"  style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="View All flights" />
+            <Button fx:id="allFlights" onAction="#viewAllFlights" style="-fx-font-size: 18; -fx-background-color: white; -fx-text-fill: #2193b0; -fx-background-radius: 10;" text="View All flights" />
             <!-- Cancel Flight Button -->
             <Button fx:id="backToLoginButton" onAction="#backToLoginClick" prefHeight="15.0" prefWidth="80.0" style="-fx-font-size: 15; -fx-background-color: #ffffff; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Log out" />
 

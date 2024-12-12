@@ -10,12 +10,10 @@ public class Reservations {
     private String destinationCity;
     private String destinationTime;
     private String airline;
-    private int availableSeats;
-    private int capacity;
 
     //Constructor for the Reservations class
     public Reservations(String reservationId, String username, String flightNumber, String departureCity, String departureTime,
-                        String destinationCity, String destinationTime, String airline, int availableSeats, int capacity) { // Initialize the fields with the provided values
+                        String destinationCity, String destinationTime, String airline) { // Initialize the fields with the provided values
         this.reservationId = reservationId;
         this.username = username;
         this.flightNumber = flightNumber;
@@ -24,8 +22,6 @@ public class Reservations {
         this.destinationCity = destinationCity;
         this.destinationTime = destinationTime;
         this.airline = airline;
-        this.availableSeats = availableSeats;
-        this.capacity = capacity;
     }
 
 
@@ -64,13 +60,6 @@ public class Reservations {
         return airline;
     }
 
-    public int getAvailableSeats() { // Getter methods for the fields
-        return availableSeats;
-    }
-
-    public int getCapacity() { //
-        return capacity;
-    }
 }
 
 

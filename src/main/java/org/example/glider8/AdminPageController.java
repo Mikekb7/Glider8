@@ -153,7 +153,7 @@ public class AdminPageController {
             e.printStackTrace();
         }
     }
-
+@FXML
     private void deleteFlight() {
         String query = "DELETE FROM flights WHERE flight_number = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {

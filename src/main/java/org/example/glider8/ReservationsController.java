@@ -42,10 +42,6 @@ public class ReservationsController {
     private TableColumn<Reservations, String> destinationTime;
     @FXML
     private TableColumn<Reservations, String> airline;
-    @FXML
-    private TableColumn<Reservations, Integer> availableSeats;
-    @FXML
-    private TableColumn<Reservations, Integer> capacity;
 
 
     @FXML
@@ -71,8 +67,6 @@ public class ReservationsController {
         destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destinationCity"));
         destinationTime.setCellValueFactory(new PropertyValueFactory<>("destinationTime"));
         airline.setCellValueFactory(new PropertyValueFactory<>("airline"));
-        availableSeats.setCellValueFactory(new PropertyValueFactory<>("availableSeats"));
-        capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 // Set the placeholder text for the TableView
         bookedFlightsTable.setPlaceholder(new Label("You have no booked flights."));
         bookedFlightsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multi-selection
@@ -185,9 +179,7 @@ public class ReservationsController {
                 flights.departure_time,
                 flights.destination_city,
                 flights.destination_time,
-                flights.airline,
-                flights.available_seats,
-                flights.capacity
+                flights.airline
             FROM 
                 reservations
             JOIN 
@@ -218,9 +210,7 @@ public class ReservationsController {
                 flights.departure_time,
                 flights.destination_city,
                 flights.destination_time,
-                flights.airline,
-                flights.available_seats,
-                flights.capacity
+                flights.airline
             FROM 
                 reservations
             JOIN 
@@ -252,9 +242,7 @@ public class ReservationsController {
                         resultSet.getString("departure_time"),
                         resultSet.getString("destination_city"),
                         resultSet.getString("destination_time"),
-                        resultSet.getString("airline"),
-                        resultSet.getInt("available_seats"),
-                        resultSet.getInt("capacity")
+                        resultSet.getString("airline")
                 ));
             }
             bookedFlightsTable.setItems(bookedFlights);
@@ -392,9 +380,9 @@ public class ReservationsController {
                             resultSet.getString("departure_time"),
                             resultSet.getString("destination_city"),
                             resultSet.getString("destination_time"),
-                            resultSet.getString("airline"),
-                            0, // Available seats (not used in reservations view)
-                            0  // Capacity (not used in reservations view)
+                            resultSet.getString("airline")
+                            // Available seats (not used in reservations view)
+                             // Capacity (not used in reservations view)
                     ));
                 }
 

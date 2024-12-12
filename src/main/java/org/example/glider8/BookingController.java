@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.glider8.common.Actions;
 
 import java.sql.*;
 
@@ -44,6 +45,8 @@ public class BookingController {
     @FXML
     private Button backToLoginButton;
     @FXML
+    private Button backToReservationsButton;
+    @FXML
     private Button cancelSelectedFlightButton; // Link to "Book a New Flight" button
     @FXML
     private TableView<Reservations> bookedFlightsTable; // TableView to display flights
@@ -66,6 +69,8 @@ public class BookingController {
         searchButton.setOnAction(event -> searchFlights());
         bookButton.setOnAction(event -> bookFlightButtonClick());
         backToLoginButton.setOnAction(event -> backToLoginClick());
+        backToReservationsButton.setOnAction(event -> navigateToReservations(event));
+
         //cancelSelectedFlightButton.setOnAction(this::handleCancelFlightButton);
 
     }
@@ -189,7 +194,7 @@ public class BookingController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while booking the flight.");
+            showAlert(Alert.AlertType.ERROR, "Database Error", "You have already booked this flight. Please choose another flight.");
         }
     }
     /*
@@ -236,7 +241,7 @@ public class BookingController {
                 showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while booking the flight.");
             }
         }
-    */
+    *//*
     private void showAlertAndNavigate(String title, String content, Reservations bookedFlight) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -247,25 +252,13 @@ public class BookingController {
                 navigateToReservations(bookedFlight);
             }
         });
-    }
+    }*/
     //     // Method to navigate to the Reservations screen
     //lo
     @FXML
-    private void navigateToReservations(Reservations bookedFlight) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/glider8/Reservations.fxml"));
-            Parent reservationsRoot = loader.load();
+    private void navigateToReservations(ActionEvent event) {
+        Actions.loadFXML(event, "/org/example/glider8/Reservations.fxml", "Reservations"); // Load the Main Menu FXML using the Actions class
 
-            ReservationsController reservationsController = loader.getController(); // Get the controller for the Reservations screen
-            reservationsController.addBooking(bookedFlight); //
-
-            Stage stage = (Stage) bookButton.getScene().getWindow(); // Get the current stage
-            stage.setScene(new Scene(reservationsRoot)); // Set the scene to the reservationsRoot
-            stage.setTitle("Your Reservations");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error loading Reservations.fxml: " + e.getMessage());
-        }
     }
 
     @FXML

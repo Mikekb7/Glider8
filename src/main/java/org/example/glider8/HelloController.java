@@ -209,7 +209,7 @@ private Button backToLoginButton;
             }
         } catch (SQLException ex){
             // Display error message if user does not exist
-            adminLoginStatusLabel.setText("User does not exsit, please register.");
+            adminLoginStatusLabel.setText("This account does not have admin access.");
             ex.printStackTrace();
 
         }

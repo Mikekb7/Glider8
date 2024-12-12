@@ -16,6 +16,7 @@
 <StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom, #f7c08a, #f7a76c);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.glider8.BookingController">
     <HBox alignment="TOP_LEFT" prefWidth="800.0" style="-fx-padding: 10;" spacing="10">
         <Button fx:id="backToLoginButton" onAction="#backToLoginClick" prefHeight="15.0" prefWidth="80.0" style="-fx-font-size: 15; -fx-background-color: #ffffff; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Log out" />
+        <Button fx:id="backToReservationsButton" alignment="CENTER" contentDisplay="TOP" onAction="#navigateToReservations" prefHeight="15.0" prefWidth="160.0" style="-fx-font-size: 15; -fx-background-color: #ffffff; -fx-text-fill: #d9534f; -fx-background-radius: 10;" text="Back to Reservations" />
 
     </HBox>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="799.0" spacing="20" style="-fx-padding: 20;">

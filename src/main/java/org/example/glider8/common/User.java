@@ -25,7 +25,7 @@ public class User {
         flights = new ArrayList<>();
     }
 
-    public User(String username, String password, String firstName, String lastName, String email, String address, String city, String state, Integer zipcode, String securityQuestion, String securityAnswer){
+    public User(String username, String password, String firstName, String lastName, String email, String address, String city, String state, String zipcode, String securityQuestion, String securityAnswer){
         this.username = username;
         this.password = password;
         this.firstName = firstName;
